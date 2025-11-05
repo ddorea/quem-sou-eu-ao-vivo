@@ -1,0 +1,221 @@
+[
+  {
+    "id": "shirley_ann_jackson",
+    "name": "Shirley Ann Jackson",
+    "category": "Ciência",
+    "image": "/characters/shirley_ann_jackson.png",
+    "hints": [
+      "Sou uma física estadunidense.",
+      "Fui a primeira mulher afro-estadunidense a obter doutorado no MIT.",
+      "Sou ex-presidente do Rensselaer Polytechnic Institute, a universidade tecnológica mais antiga dos EUA.",
+      "Recebi, em 2007, o prestigiado Prêmio Vannevar Bush por uma vida de realizações em pesquisa, educação e políticas públicas."
+    ]
+  },
+  {
+    "id": "zumbi_dos_palmares",
+    "name": "Zumbi dos Palmares",
+    "category": "História",
+    "image": "/characters/zumbi_dos_palmares.png",
+    "hints": [
+      "Fui um dos líderes do maior quilombo que já existiu no Brasil.",
+      "Em 21 de março de 1997, meu nome foi inserido como herói nacional no Livro de Aço dos Heróis e Heroínas da Pátria.",
+      "Sou um símbolo de resistência e luta de africanos contra a escravização no Brasil Colônia.",
+      "O Dia da Consciência Negra faz referência à minha história de vida."
+    ]
+  },
+  {
+    "id": "carolina_maria_de_jesus",
+    "name": "Carolina de Jesus",
+    "category": "Literatura",
+    "image": "/characters/carolina_de_jesus.png",
+    "hints": [
+      "Sou uma escritora brasileira, autora de 'Quarto de Despejo'.",
+      "Nasci em 1914 em Sacramento (MG) e vivi em São Paulo.",
+      "Trabalhei como empregada doméstica e catadora de papel para sustentar meus três filhos.",
+      "Escrevi sobre a miséria e a vida nas favelas; registrei a realidade do Brasil do século XX sob a perspectiva de uma mulher negra e favelada."
+    ]
+  },
+  {
+    "id": "nelson_mandela",
+    "name": "Nelson Mandela",
+    "category": "Política",
+    "image": "/characters/nelson_mandela.png",
+    "hints": [
+      "Fui presidente da África do Sul.",
+      "Recebi o Prêmio Nobel da Paz em 1993 por minha luta contra o regime de segregação racial.",
+      "Em 1964, fui condenado à prisão perpétua e passei 27 anos preso, principalmente na Ilha de Robben.",
+      "Em 11 de fevereiro de 1990 fui libertado; iniciei meus estudos em Direito na Universidade de Fort Hare, a primeira do país a ministrar cursos para negros."
+    ]
+  },
+  {
+    "id": "bob_marley",
+    "name": "Bob Marley",
+    "category": "Música",
+    "image": "/characters/bob_marley.png",
+    "hints": [
+      "Fui cantor, compositor e guitarrista jamaicano.",
+      "Sou responsável por tornar o reggae conhecido mundialmente.",
+      "Nasci em 6 de fevereiro de 1945; meu pai era militar branco inglês e minha mãe, uma jovem negra jamaicana.",
+      "Disseminei ideias de paz através da música e recebi homenagens como a 'Medalha da Paz' após o 'One Love Peace Concert'."
+    ]
+  },
+  {
+    "id": "maria_felipa",
+    "name": "Maria Felipa",
+    "category": "História",
+    "image": "/characters/maria_felipa.png",
+    "hints": [
+      "Fui uma mulher negra, marisqueira, e lutei na Guerra da Independência do Brasil e da Bahia em 2 de julho de 1823.",
+      "Nasci na Ilha de Itaparica, na Baía de Todos os Santos (BA).",
+      "Em 26 de julho de 2018, fui declarada Heroína da Pátria Brasileira, com nome inscrito no Livro dos Heróis e Heroínas da Pátria.",
+      "Nos cortejos do 2 de julho (Salvador) e 7 de janeiro (Itaparica), sempre há mulheres me representando no desfile cívico."
+    ]
+  },
+  {
+    "id": "jaqueline_goes",
+    "name": "Jaqueline Góes",
+    "category": "Ciência",
+    "image": "/characters/jaqueline_goes.png",
+    "hints": [
+      "Sou doutora em Patologia Humana e Experimental pela UFBA.",
+      "Integrei a equipe que mapeou os primeiros genomas do coronavírus no Brasil.",
+      "Decidi ser cientista já na fase adulta, durante a graduação.",
+      "Sou baiana; aprendi desde cedo a valorizar o conhecimento em minha família."
+    ]
+  },
+  {
+    "id": "sueli_carneiro",
+    "name": "Sueli Carneiro",
+    "category": "Pensamento Social",
+    "image": "/characters/sueli_carneiro.png",
+    "hints": [
+      "Sou autora de livros e artigos sobre raça, gênero e direitos humanos.",
+      "Nasci em São Paulo e sou doutora em Filosofia pela USP.",
+      "Sou referência do Movimento Negro nacional, com forte presença nos campos político e acadêmico.",
+      "Atuei pela defesa constitucional da implantação de cotas raciais nas universidades brasileiras."
+    ]
+  },
+  {
+    "id": "milton_santos",
+    "name": "Milton Santos",
+    "category": "Geografia",
+    "image": "/characters/milton_santos.png",
+    "hints": [
+      "Fiz o curso de Direito, mas minha paixão sempre foi a Geografia.",
+      "Concluí, em 1958, o doutorado em Geografia na Universidade de Estrasburgo, na França.",
+      "Sou baiano, filho de professores; aos 13 anos já dava aulas de matemática.",
+      "Tenho mais de 20 títulos de doutor honoris causa e sou o único geógrafo latino-americano laureado com o Prêmio Vautrin Lud (1994).",
+      "Fui preso pela ditadura militar e me exilei na França."
+    ]
+  },
+  {
+    "id": "martin_luther_king_jr",
+    "name": "Martin Luther King Jr.",
+    "category": "Política / Direitos Civis",
+    "image": "/characters/martin_luther_king_jr.png",
+    "hints": [
+      "Fui pastor em Montgomery, Alabama.",
+      "Ativista dos direitos civis nos EUA, tornei-me uma das maiores lideranças contra a discriminação racial.",
+      "Em 1963, liderei a Marcha sobre Washington e pronunciei o discurso 'I Have a Dream'.",
+      "Recebi o Prêmio Nobel da Paz em 1964."
+    ]
+  },
+  {
+    "id": "baco_exu_do_blues",
+    "name": "Baco Exu do Blues",
+    "category": "Música",
+    "image": "/characters/baco_exu_do_blues.png",
+    "hints": [
+      "Meu nome de nascimento é Diogo Álvaro Ferreira Moncorvo; nasci em Salvador em 11 de janeiro de 1996.",
+      "Escolhi 'Baco' (deus romano do vinho) e 'Exu' (orixá mensageiro e guardião) para batizar minha carreira.",
+      "Fui eleito 5º melhor disco brasileiro de 2017 pela Rolling Stone Brasil.",
+      "Em 2017, ganhei o Prêmio Multishow de Artista Revelação."
+    ]
+  },
+  {
+    "id": "djonga",
+    "name": "Djonga",
+    "category": "Música",
+    "image": "/characters/djonga.png",
+    "hints": [
+      "Nasci em 4 de junho de 1994 na Favela do Índio, em Belo Horizonte (MG).",
+      "Cursei História na UFOP até o sétimo período, mas não concluí por causa da carreira musical.",
+      "Minha avó Maria Eni Viana é uma grande referência na minha vida.",
+      "Sou rapper, escritor e compositor brasileiro, um dos nomes mais influentes do rap atual."
+    ]
+  },
+  {
+    "id": "iza",
+    "name": "IZA",
+    "category": "Música",
+    "image": "/characters/iza.png",
+    "hints": [
+      "Nasci e fui criada no bairro de Olaria (Rio de Janeiro).",
+      "Sou filha de Isabel Cristina (professora de música e artes) e de Djama Leite (militar naval).",
+      "Aos 6 anos, mudei para Natal (RN) e vivi episódios de racismo em escola particular tradicional.",
+      "Com bolsa do ENEM, estudei Publicidade e Propaganda na PUC-Rio; trabalhei como editora de vídeo.",
+      "Em 2019, fui rainha de bateria da Imperatriz Leopoldinense."
+    ]
+  },
+  {
+    "id": "elza_soares",
+    "name": "Elza Soares",
+    "category": "Música",
+    "image": "/characters/elza_soares.png",
+    "hints": [
+      "Nasci em família humilde, com dez irmãos, na favela da Moça Bonita (hoje Vila Vintém), em Padre Miguel, Rio de Janeiro.",
+      "Fiquei viúva aos 21 anos, com quatro filhos; trabalhei em diversos empregos braçais e enfrentei fome.",
+      "Em 2000, fui eleita 'Melhor Cantora do Milênio' pela BBC; em 2019 recebi doutor honoris causa da UFRGS.",
+      "Sou uma das maiores cantoras e puxadoras de samba-enredo do Brasil."
+    ]
+  },
+  {
+    "id": "emicida",
+    "name": "Emicida",
+    "category": "Música / Cultura",
+    "image": "/characters/emicida.png",
+    "hints": [
+      "Fiquei conhecido pelas rimas de improviso, tornando-me um dos MCs mais respeitados do país.",
+      "Venci 11 vezes seguidas a Batalha da Santa Cruz e 12 vezes a Rinha dos MCs.",
+      "Em 2018 lancei o livro infantil 'Amoras', sobre representação, identidade e referências afro.",
+      "Cresci no Jardim Cachoeira (Zona Norte de SP); sou irmão do cantor Fióti e meu nome de nascimento é Leandro Roque."
+    ]
+  },
+  {
+    "id": "lazaro_ramos",
+    "name": "Lázaro Ramos",
+    "category": "Artes Cênicas",
+    "image": "/characters/lazaro_ramos.png",
+    "hints": [
+      "Sou ator, apresentador, dublador, cineasta e escritor de literatura infantil; comecei no Bando de Teatro Olodum.",
+      "Trabalhei como técnico de laboratório de análises clínicas e estudei patologia em curso técnico.",
+      "Comecei a estudar teatro na escola e, aos 10 anos, já fazia pequenos trabalhos (como 'Lula Somar').",
+      "Fui indicado ao Emmy (2007) de melhor ator por 'Cobras & Lagartos', como Foguinho."
+    ]
+  },
+  {
+    "id": "luedji_luna",
+    "name": "Luedji Luna",
+    "category": "Música",
+    "image": "/characters/luedji_luna.png",
+    "hints": [
+      "Comecei a compor aos 17 anos e cantava informalmente em bares de Salvador.",
+      "Em 2011, estudei canto popular na Escola Baiana de Canto Popular.",
+      "Minhas músicas abordam preconceito racial, feminismo e empoderamento da mulher negra, fortalecendo a cultura afro-brasileira.",
+      "Nasci no Cabula e cresci em Brotas (Salvador); sou filha de um historiador e de uma economista.",
+      "Em 2021, o álbum 'Bom Mesmo É Estar Debaixo D'Água' foi indicado ao Grammy Latino de MPB."
+    ]
+  },
+  {
+    "id": "zeze_motta",
+    "name": "Zezé Motta",
+    "category": "Artes Cênicas / Música",
+    "image": "/characters/zeze_mota.png",
+    "hints": [
+      "Recebi grande reconhecimento por protagonizar o filme 'Xica da Silva' (1976).",
+      "Sou do candomblé: filha de Oxum Opará com Oxóssi; cresci com mãe Testemunha de Jeová e pai espírita.",
+      "Sou atriz e cantora, expoente da cultura afro-brasileira e militante do MNU.",
+      "Atuei ativamente no combate ao racismo, organizando arquivo de atores negros para evitar o silenciamento na indústria."
+    ]
+  }
+]
