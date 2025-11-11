@@ -553,3 +553,97 @@ html, body {
   0% { opacity: 0 }
   100% { opacity: 1 }
 }
+
+.btn-choice {
+  background: rgba(255, 255, 255, 0.10);
+  border: 2px solid #d4a373;
+  border-radius: 18px;
+  padding: 18px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-choice:hover {
+  background: rgba(255, 255, 255, 0.20);
+  transform: scale(1.03);
+}
+
+.btn-choice:active {
+  transform: scale(0.96);
+}
+
+/* ------------------------- */
+/*     PÓDIO FINAL BONITO    */
+/* ------------------------- */
+
+.podium-wrapper {
+  margin-top: 30px;
+}
+
+.podium-card {
+  background: rgba(20, 10, 0, 0.6);
+  border: 2px solid #cfae6b;
+  padding: 25px 35px;
+  border-radius: 25px;
+  text-align: center;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  min-width: 240px;
+  transition: transform 0.25s;
+}
+
+.podium-card:hover {
+  transform: translateY(-8px);
+}
+
+.podium-first {
+  transform: scale(1.25);
+  border-width: 3px;
+  border-color: gold;
+  box-shadow: 0 0 25px gold;
+}
+
+.podium-second {
+  transform: translateY(20px);
+}
+
+.podium-third {
+  transform: translateY(20px);
+}
+
+/* Medalhão */
+.medal-icon {
+  font-size: 65px;
+  margin-bottom: 12px;
+}
+
+/* Nome */
+.podium-name {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+/* Nome do campeão */
+.podium-winner {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: gold;
+  text-shadow: 0 0 8px gold;
+}
+
+/* Pontos */
+.podium-score {
+  font-size: 1.4rem;
+  opacity: 0.9;
+}
+
+.podium-winner-score {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #ffe6a8;
+}

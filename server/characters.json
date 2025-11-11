@@ -6,9 +6,8 @@
     "image": "/characters/shirley_ann_jackson.png",
     "hints": [
       "Sou uma física estadunidense.",
-      "Fui a primeira mulher afro-estadunidense a obter doutorado no MIT.",
-      "Sou ex-presidente do Rensselaer Polytechnic Institute, a universidade tecnológica mais antiga dos EUA.",
-      "Recebi, em 2007, o prestigiado Prêmio Vannevar Bush por uma vida de realizações em pesquisa, educação e políticas públicas."
+      "Fui a Primeira mulher afroestadunidense a obter um doutorado no Instituto de Tecnologia de Massachusetts (MIT).",
+      "Recebi em 2007 o prestigiado Prêmio Vannevar Bush por uma \"vida de realizações em pesquisa científica, educação e contribuições de estadistas seniores para políticas públicas\"."
     ]
   },
   {
@@ -18,21 +17,19 @@
     "image": "/characters/zumbi_dos_palmares.png",
     "hints": [
       "Fui um dos líderes do maior quilombo que já existiu no Brasil.",
-      "Em 21 de março de 1997, meu nome foi inserido como herói nacional no Livro de Aço dos Heróis e Heroínas da Pátria.",
-      "Sou um símbolo de resistência e luta de africanos contra a escravização no Brasil Colônia.",
-      "O Dia da Consciência Negra faz referência à minha história de vida."
+      "Em 21 de março de 1997 tive meu nome inserido como herói nacional no Livro de Aço dos Heróis e Heroínas Nacionais do Brasil.",
+      "O dia da Consciência Negra é uma referência a minha história de vida."
     ]
   },
   {
-    "id": "carolina_maria_de_jesus",
+    "id": "carolina_de_jesus",
     "name": "Carolina de Jesus",
     "category": "Literatura",
     "image": "/characters/carolina_de_jesus.png",
     "hints": [
-      "Sou uma escritora brasileira, autora de 'Quarto de Despejo'.",
-      "Nasci em 1914 em Sacramento (MG) e vivi em São Paulo.",
-      "Trabalhei como empregada doméstica e catadora de papel para sustentar meus três filhos.",
-      "Escrevi sobre a miséria e a vida nas favelas; registrei a realidade do Brasil do século XX sob a perspectiva de uma mulher negra e favelada."
+      "Sou uma Escritora Brasileira, autora do livro Quarto de Despejo.",
+      "Nasci em 1914, na cidade de Sacramento, em Minas Gerais. Depois me mudei para São Paulo, onde trabalhei como empregada doméstica e catadora de papel para sustentar meus três filhos, que criei sozinha.",
+      "Fui uma mulher, negra e favelada no Brasil do século XX."
     ]
   },
   {
@@ -41,10 +38,9 @@
     "category": "Política",
     "image": "/characters/nelson_mandela.png",
     "hints": [
-      "Fui presidente da África do Sul.",
-      "Recebi o Prêmio Nobel da Paz em 1993 por minha luta contra o regime de segregação racial.",
-      "Em 1964, fui condenado à prisão perpétua e passei 27 anos preso, principalmente na Ilha de Robben.",
-      "Em 11 de fevereiro de 1990 fui libertado; iniciei meus estudos em Direito na Universidade de Fort Hare, a primeira do país a ministrar cursos para negros."
+      "Fui Presidente da África do Sul.",
+      "Recebi o Prêmio Nobel da Paz, em dezembro de 1993, por minha luta contra o regime de segregação racial.",
+      "Em 1964 fui preso e condenado à prisão perpétua. Fiquei 27 anos no cárcere na Ilha de Robben. No dia 11 de fevereiro de 1990, depois de 26 anos, fui libertado."
     ]
   },
   {
@@ -53,10 +49,9 @@
     "category": "Música",
     "image": "/characters/bob_marley.png",
     "hints": [
-      "Fui cantor, compositor e guitarrista jamaicano.",
-      "Sou responsável por tornar o reggae conhecido mundialmente.",
-      "Nasci em 6 de fevereiro de 1945; meu pai era militar branco inglês e minha mãe, uma jovem negra jamaicana.",
-      "Disseminei ideias de paz através da música e recebi homenagens como a 'Medalha da Paz' após o 'One Love Peace Concert'."
+      "Fui um cantor, compositor e guitarrista jamaicano, responsável por tornar o reggae um ritmo conhecido mundialmente.",
+      "Nasci no dia 06 de fevereiro de 1945. Meus pais eram: um militar branco, capitão do exército inglês, e uma jovem negra jamaicana.",
+      "Recebi a “Medalha da Paz”, na sede das Nações Unidas, em Nova Iorque, após a realização do show “One Love Peace Concert”."
     ]
   },
   {
@@ -65,10 +60,9 @@
     "category": "História",
     "image": "/characters/maria_felipa.png",
     "hints": [
-      "Fui uma mulher negra, marisqueira, e lutei na Guerra da Independência do Brasil e da Bahia em 2 de julho de 1823.",
-      "Nasci na Ilha de Itaparica, na Baía de Todos os Santos (BA).",
-      "Em 26 de julho de 2018, fui declarada Heroína da Pátria Brasileira, com nome inscrito no Livro dos Heróis e Heroínas da Pátria.",
-      "Nos cortejos do 2 de julho (Salvador) e 7 de janeiro (Itaparica), sempre há mulheres me representando no desfile cívico."
+      "Nasci na Ilha de Itaparica, na Baía de Todos os Santos - Bahia.",
+      "Fui uma mulher negra, marisqueira, e lutei na guerra da independência do Brasil e da Bahia, em 2 de julho de 1823.",
+      "Fui declarada, em 26 de julho de 2018, Heroína da Pátria Brasileira tendo meu nome inscrito no Livro dos Heróis e Heroínas da Pátria, que se encontra no Panteão da Pátria e da Liberdade Tancredo Neves, em Brasília."
     ]
   },
   {
@@ -77,10 +71,9 @@
     "category": "Ciência",
     "image": "/characters/jaqueline_goes.png",
     "hints": [
-      "Sou doutora em Patologia Humana e Experimental pela UFBA.",
-      "Integrei a equipe que mapeou os primeiros genomas do coronavírus no Brasil.",
-      "Decidi ser cientista já na fase adulta, durante a graduação.",
-      "Sou baiana; aprendi desde cedo a valorizar o conhecimento em minha família."
+      "Sou uma cientista brasileira que integrou a equipe que mapeou os primeiros genomas do coronavírus no Brasil.",
+      "Sou doutora em Patologia Humana e Experimental, pela Universidade Federal da Bahia (UFBA).",
+      "Sou filha de pai engenheiro civil e mãe auxiliar de enfermagem e pedagoga, sou baiana e aprendi desde cedo a valorizar o conhecimento."
     ]
   },
   {
@@ -89,10 +82,9 @@
     "category": "Pensamento Social",
     "image": "/characters/sueli_carneiro.png",
     "hints": [
-      "Sou autora de livros e artigos sobre raça, gênero e direitos humanos.",
-      "Nasci em São Paulo e sou doutora em Filosofia pela USP.",
-      "Sou referência do Movimento Negro nacional, com forte presença nos campos político e acadêmico.",
-      "Atuei pela defesa constitucional da implantação de cotas raciais nas universidades brasileiras."
+      "Nasci em São Paulo, e sou doutora em filosofia pela Universidade de São Paulo.",
+      "Sou autora de dois livros e artigos sobre raça, gênero e direitos humanos publicados no Brasil e no mundo.",
+      "Sou uma das pessoas responsáveis pela defesa constitucional da implantação de cotas raciais nas universidades brasileiras."
     ]
   },
   {
@@ -101,22 +93,19 @@
     "category": "Geografia",
     "image": "/characters/milton_santos.png",
     "hints": [
-      "Fiz o curso de Direito, mas minha paixão sempre foi a Geografia.",
-      "Concluí, em 1958, o doutorado em Geografia na Universidade de Estrasburgo, na França.",
-      "Sou baiano, filho de professores; aos 13 anos já dava aulas de matemática.",
-      "Tenho mais de 20 títulos de doutor honoris causa e sou o único geógrafo latino-americano laureado com o Prêmio Vautrin Lud (1994).",
-      "Fui preso pela ditadura militar e me exilei na França."
+      "Nasci na Bahia, sou filho de pais professores, com 13 anos já dava aulas de matemática no ginásio onde estudava.",
+      "Tenho mais de 20 títulos de doutor honoris causa no Brasil e no mundo e sou o único geógrafo latino-americano a ser homenageado com o prêmio Vautrin Lud, em 1994, considerado o Nobel da Geografia.",
+      "Fui preso pela ditadura militar, mas consegui exílio na França."
     ]
   },
   {
     "id": "martin_luther_king_jr",
     "name": "Martin Luther King Jr.",
-    "category": "Política / Direitos Civis",
+    "category": "Direitos Civis",
     "image": "/characters/martin_luther_king_jr.png",
     "hints": [
-      "Fui pastor em Montgomery, Alabama.",
-      "Ativista dos direitos civis nos EUA, tornei-me uma das maiores lideranças contra a discriminação racial.",
-      "Em 1963, liderei a Marcha sobre Washington e pronunciei o discurso 'I Have a Dream'.",
+      "Fui um ativista norte-americano, lutei contra a discriminação racial e me tornei um dos mais importantes líderes do movimento dos direitos civis nos EUA.",
+      "Em 1963, liderei a Marcha sobre Washington, que reuniu 250 mil pessoas, onde fiz o discurso intitulado I Have a Dream (em português, Eu tenho um sonho), onde descrevo uma sociedade onde negros e brancos possam viver harmoniosamente.",
       "Recebi o Prêmio Nobel da Paz em 1964."
     ]
   },
@@ -126,10 +115,9 @@
     "category": "Música",
     "image": "/characters/baco_exu_do_blues.png",
     "hints": [
-      "Meu nome de nascimento é Diogo Álvaro Ferreira Moncorvo; nasci em Salvador em 11 de janeiro de 1996.",
-      "Escolhi 'Baco' (deus romano do vinho) e 'Exu' (orixá mensageiro e guardião) para batizar minha carreira.",
-      "Fui eleito 5º melhor disco brasileiro de 2017 pela Rolling Stone Brasil.",
-      "Em 2017, ganhei o Prêmio Multishow de Artista Revelação."
+      "Para batizar minha carreira, escolhi o nome do Deus romano do vinho e dos excessos, e de um orixá considerado mensageiro e guardião em religiões de matriz africana.",
+      "Fui eleito o 5º melhor disco brasileiro de 2017 pela revista Rolling Stone Brasil.",
+      "Em 2017, fui premiado como Artista Revelação pelo Prêmio Multishow de Música Brasileira."
     ]
   },
   {
@@ -138,10 +126,9 @@
     "category": "Música",
     "image": "/characters/djonga.png",
     "hints": [
-      "Nasci em 4 de junho de 1994 na Favela do Índio, em Belo Horizonte (MG).",
-      "Cursei História na UFOP até o sétimo período, mas não concluí por causa da carreira musical.",
-      "Minha avó Maria Eni Viana é uma grande referência na minha vida.",
-      "Sou rapper, escritor e compositor brasileiro, um dos nomes mais influentes do rap atual."
+      "Nasci em 04 de junho de 1994 na Favela do Índio em Belo Horizonte - Minas Gerais.",
+      "Minha avó Maria Eni Viana é uma grande referência em minha vida.",
+      "Sou um rapper, escritor e compositor brasileiro, considerado um dos nomes mais influentes do rap na atualidade."
     ]
   },
   {
@@ -150,11 +137,9 @@
     "category": "Música",
     "image": "/characters/iza.png",
     "hints": [
-      "Nasci e fui criada no bairro de Olaria (Rio de Janeiro).",
-      "Sou filha de Isabel Cristina (professora de música e artes) e de Djama Leite (militar naval).",
-      "Aos 6 anos, mudei para Natal (RN) e vivi episódios de racismo em escola particular tradicional.",
-      "Com bolsa do ENEM, estudei Publicidade e Propaganda na PUC-Rio; trabalhei como editora de vídeo.",
-      "Em 2019, fui rainha de bateria da Imperatriz Leopoldinense."
+      "Aos 6 anos minha família se mudou para Natal, no Rio Grande do Norte. Durante a infância sofri racismo por ser uma das únicas crianças negras numa escola particular e tradicional da cidade de Natal.",
+      "Nasci e fui criada no bairro de Olaria no Rio de Janeiro. Sou filha da professora de música e artes Isabel Cristina Lima e do militar naval Djama Leite Lima.",
+      "Com dezoito anos, ingressei com bolsa pelo Enem no curso de Publicidade e Propaganda na PUC-Rio. Concluí o curso e trabalhei como editora de vídeo."
     ]
   },
   {
@@ -163,10 +148,9 @@
     "category": "Música",
     "image": "/characters/elza_soares.png",
     "hints": [
-      "Nasci em família humilde, com dez irmãos, na favela da Moça Bonita (hoje Vila Vintém), em Padre Miguel, Rio de Janeiro.",
-      "Fiquei viúva aos 21 anos, com quatro filhos; trabalhei em diversos empregos braçais e enfrentei fome.",
-      "Em 2000, fui eleita 'Melhor Cantora do Milênio' pela BBC; em 2019 recebi doutor honoris causa da UFRGS.",
-      "Sou uma das maiores cantoras e puxadoras de samba-enredo do Brasil."
+      "Fui uma cantora, compositora musical e puxadora de samba-enredo brasileira.",
+      "Fiquei viúva aos 21 anos e com quatro filhos para criar. Trabalhei em diversos empregos braçais, muitas vezes não tinha o que comer, mas meu sonho sempre foi cantar.",
+      "Em 2000, fui premiada como \"Melhor Cantora do Milênio\" pela BBC em Londres e em 2019 recebi o título de doutora Honoris causa pela Universidade Federal do Rio Grande do Sul."
     ]
   },
   {
@@ -175,10 +159,9 @@
     "category": "Música / Cultura",
     "image": "/characters/emicida.png",
     "hints": [
-      "Fiquei conhecido pelas rimas de improviso, tornando-me um dos MCs mais respeitados do país.",
-      "Venci 11 vezes seguidas a Batalha da Santa Cruz e 12 vezes a Rinha dos MCs.",
-      "Em 2018 lancei o livro infantil 'Amoras', sobre representação, identidade e referências afro.",
-      "Cresci no Jardim Cachoeira (Zona Norte de SP); sou irmão do cantor Fióti e meu nome de nascimento é Leandro Roque."
+      "Meu nome na certidão de nascimento é Leandro Roque de Oliveira. Nasci em São Paulo, no dia 17 de agosto de 1985.",
+      "Fiquei conhecido por minhas rimas de improviso, o que fez com que me tornasse um dos MC's mais respeitados do país. Venci onze vezes consecutivas a batalha de MC da Santa Cruz e por doze vezes a Rinha dos MC.",
+      "Cresci com uma vida simples no bairro Jardim Cachoeira na Zona Norte paulistana. Sou filho de Dona Jacira, tenho duas irmãs e um irmão que é o cantor Evandro Fióti."
     ]
   },
   {
@@ -187,10 +170,9 @@
     "category": "Artes Cênicas",
     "image": "/characters/lazaro_ramos.png",
     "hints": [
-      "Sou ator, apresentador, dublador, cineasta e escritor de literatura infantil; comecei no Bando de Teatro Olodum.",
-      "Trabalhei como técnico de laboratório de análises clínicas e estudei patologia em curso técnico.",
-      "Comecei a estudar teatro na escola e, aos 10 anos, já fazia pequenos trabalhos (como 'Lula Somar').",
-      "Fui indicado ao Emmy (2007) de melhor ator por 'Cobras & Lagartos', como Foguinho."
+      "Trabalhei como técnico de laboratório de análises clínicas. Fiz o curso de Patologia no colegial técnico em Salvador. Nessa época minha mãe foi acometida por uma doença degenerativa. Sendo filho único, eu ajudava a pagar as contas de casa.",
+      "Comecei a estudar teatro na escola e aos 10 anos de idade já fazia pequenos trabalhos no teatro com o nome artístico de: Lula Somar.",
+      "Sou um ator, apresentador, dublador, cineasta e escritor de literatura infantil brasileiro, que iniciou a carreira artística no Bando de Teatro Olodum."
     ]
   },
   {
@@ -199,23 +181,20 @@
     "category": "Música",
     "image": "/characters/luedji_luna.png",
     "hints": [
-      "Comecei a compor aos 17 anos e cantava informalmente em bares de Salvador.",
-      "Em 2011, estudei canto popular na Escola Baiana de Canto Popular.",
-      "Minhas músicas abordam preconceito racial, feminismo e empoderamento da mulher negra, fortalecendo a cultura afro-brasileira.",
-      "Nasci no Cabula e cresci em Brotas (Salvador); sou filha de um historiador e de uma economista.",
-      "Em 2021, o álbum 'Bom Mesmo É Estar Debaixo D'Água' foi indicado ao Grammy Latino de MPB."
+      "Comecei a compor minhas canções aos 17 anos, onde já cantava informalmente em bares de Salvador. Em 2011 comecei a estudar canto popular na Escola Baiana de Canto Popular.",
+      "Em 2021, meu álbum Bom Mesmo É Estar Debaixo D'Água foi indicado ao Grammy Latino de Melhor Álbum de Música Popular Brasileira.",
+      "Minhas músicas retratam o preconceito racial, feminismo, empoderamento feminino, especialmente da mulher negra, buscando sempre fortalecer a cultura afro-brasileira."
     ]
   },
   {
     "id": "zeze_motta",
-    "name": "Zezé Motta",
+    "name": "Zezé Mota",
     "category": "Artes Cênicas / Música",
     "image": "/characters/zeze_mota.png",
     "hints": [
-      "Recebi grande reconhecimento por protagonizar o filme 'Xica da Silva' (1976).",
-      "Sou do candomblé: filha de Oxum Opará com Oxóssi; cresci com mãe Testemunha de Jeová e pai espírita.",
-      "Sou atriz e cantora, expoente da cultura afro-brasileira e militante do MNU.",
-      "Atuei ativamente no combate ao racismo, organizando arquivo de atores negros para evitar o silenciamento na indústria."
+      "Sou uma atriz e cantora brasileira, considerada uma das maiores artistas do país, expoente da cultura afro-brasileira.",
+      "Recebi muitos prêmios e homenagens da crítica por minha atuação como a protagonista do filme Xica da Silva em 1976.",
+      "Militante do Movimento Negro Unificado (MNU), denunciei racismos e atuei ativamente para combatê-lo, organizando por exemplo um arquivo de atores negros para que não haja o silenciamento destes artistas."
     ]
   }
 ]

@@ -6,7 +6,7 @@ export default function App() {
     <div className="page-center bg-origens overlay animate-tribal">
       <div className="afro-card kente-border max-w-2xl w-full box-shadow-lift space-y-8 text-center">
 
-        <h1 className="title-afro text-6xl mb-4">Quem Sou Eu</h1>
+        <h1 className="title-afro text-6xl mb-4">Quem Sou Eu?</h1>
         <p className="opacity-90 text-xl">
            Jogo educativo sobre personalidades negras, com pistas progressivas, equipes e ranking em tempo real. Inspirado no letramento racial.
         </p>

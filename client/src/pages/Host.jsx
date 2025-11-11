@@ -63,12 +63,14 @@ export default function Host() {
 
             <h2 className="h2 text-2xl">Jogadores</h2>
             <ul className="space-y-2">
-              {Object.values(players).map((p, i) => (
-                <li key={i} className="chip rounded-xl p-3 flex justify-between">
-                  <span>{p.name}</span>
-                  <span>{p.score ?? 0} pts</span>
-                </li>
-              ))}
+              {Object.values(players)
+                .filter(p => p.name !== "Host" && p.name !== "PROJETOR") // ✅ remove os dois
+                .map((p, i) => (
+                  <li key={i} className="chip rounded-xl p-3 flex justify-between">
+                    <span>{p.name}</span>
+                    <span>{p.score ?? 0} pts</span>
+                  </li>
+                ))}
             </ul>
 
             <hr className="hr-gold opacity-40" />
