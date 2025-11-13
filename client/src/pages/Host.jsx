@@ -77,16 +77,20 @@ export default function Host() {
 
             <h2 className="h2 text-2xl">Gerenciar Sala</h2>
             <div className="space-y-3">
+
               <button className="btn-secondary w-full rounded-xl" onClick={startGame}>
                 Iniciar Partida
               </button>
 
-              <Link
-                to={`/projector/${roomCode}`}
-                className="btn-ghost w-full block text-center rounded-xl"
+              <button
+                className="btn-ghost w-full text-center rounded-xl"
+                onClick={() => {
+                  const url = `${import.meta.env.BASE_URL}projector/${roomCode}`;
+                  window.open(url, "_blank", "noopener,noreferrer");
+                }}
               >
                 Abrir Projetor
-              </Link>
+              </button>
             </div>
           </>
         )}

@@ -159,10 +159,9 @@ export default function Projector() {
         {phase === "final" && rank?.podium && (
           <div className="mt-20">
 
-            <h2 className="text-5xl title-afro text-center mb-10">🏆 Pódio Final 🏆</h2>
+            <h2 className="text-5xl title-afro text-center mb-20">🏆 Pódio Final 🏆</h2>
 
             <div className="flex justify-center items-end gap-6 podium-wrapper">
-
               {/* Segundo Lugar */}
               <div className="podium-card podium-second">
                 <div className="medal-icon">🥈</div>
@@ -185,13 +184,10 @@ export default function Projector() {
                 <div className="podium-name">{rank.podium[2]?.name || "-"}</div>
                 <div className="podium-score">{rank.podium[2]?.score ?? 0} pts</div>
               </div>
-
             </div>
 
           </div>
         )}
-
-
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ export default function App() {
 
         <h1 className="title-afro text-6xl mb-4">Quem Sou Eu?</h1>
         <p className="opacity-90 text-xl">
-           Jogo educativo sobre personalidades negras, com pistas progressivas, equipes e ranking em tempo real. Inspirado no letramento racial.
+           Vamos começar um desafio de memória e representatividade: você consegue reconhecer estes personagens negros que marcaram a história, a cultura e as nossas narrativas?
         </p>
 
         <div className="space-y-4">
