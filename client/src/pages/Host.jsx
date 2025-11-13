@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { getSocket } from "../lib/socket";
-import { Link } from "react-router-dom";
 
 export default function Host() {
   const [socket, setSocket] = useState(null);
@@ -16,13 +15,20 @@ export default function Host() {
   }, []);
 
   function createRoom() {
-    socket.emit("room:create", { hostName: "Host", totalRounds: rounds }, ({ roomCode }) => {
-      setRoomCode(roomCode);
-    });
+    socket.emit(
+      "room:create",
+      { hostName: "Host", totalRounds: rounds },
+      ({ roomCode }) => setRoomCode(roomCode)
+    );
   }
 
   function startGame() {
     socket.emit("game:start", { roomCode });
+  }
+
+  function openProjector() {
+    const url = `${import.meta.env.BASE_URL}#/projector/${roomCode}`;
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -34,10 +40,7 @@ export default function Host() {
 
         {!roomCode ? (
           <div className="space-y-6 text-center">
-
-            <p className="text-lg opacity-90">
-              Defina quantos rounds você deseja jogar:
-            </p>
+            <p className="text-lg opacity-90">Defina quantos rounds você deseja jogar:</p>
 
             <input
               type="number"
@@ -64,7 +67,7 @@ export default function Host() {
             <h2 className="h2 text-2xl">Jogadores</h2>
             <ul className="space-y-2">
               {Object.values(players)
-                .filter(p => p.name !== "Host" && p.name !== "PROJETOR") // ✅ remove os dois
+                .filter((p) => p.name !== "Host" && p.name !== "PROJETOR")
                 .map((p, i) => (
                   <li key={i} className="chip rounded-xl p-3 flex justify-between">
                     <span>{p.name}</span>
@@ -77,17 +80,13 @@ export default function Host() {
 
             <h2 className="h2 text-2xl">Gerenciar Sala</h2>
             <div className="space-y-3">
-
               <button className="btn-secondary w-full rounded-xl" onClick={startGame}>
                 Iniciar Partida
               </button>
 
               <button
                 className="btn-ghost w-full text-center rounded-xl"
-                onClick={() => {
-                  const url = `${import.meta.env.BASE_URL}projector/${roomCode}`;
-                  window.open(url, "_blank", "noopener,noreferrer");
-                }}
+                onClick={openProjector}
               >
                 Abrir Projetor
               </button>
