@@ -6,25 +6,54 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
+// ------------------------------------------------------------
+// CONFIGURAÇÃO DE PATHS (necessário no Render)
+// ------------------------------------------------------------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ------------------------------------------------------------
+// VARIÁVEIS DE AMBIENTE
+// ------------------------------------------------------------
 const PORT = process.env.PORT || 4000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
 const HINT_SECONDS = Number(process.env.ROUND_SECONDS_PER_HINT || 15);
 
-const characters = JSON.parse(fs.readFileSync("./characters.json", "utf-8"));
+// 🔥 CORS LIBERADO PARA PRODUÇÃO
+const CORS_ALLOWED = [
+  "http://localhost:5173",
+  "https://ddorea.github.io",
+  "https://ddorea.github.io/quem-sou-eu-ao-vivo"
+];
+
+console.log("🔧 CORS permitido:", CORS_ALLOWED);
+
+// ------------------------------------------------------------
+// CARREGAR PERSONAGENS (corrige erro de path no Render)
+// ------------------------------------------------------------
+const charactersPath = path.join(__dirname, "characters.json");
+const characters = JSON.parse(fs.readFileSync(charactersPath, "utf-8"));
 
 const app = express();
-app.use(cors({ origin: CORS_ORIGIN }));
+app.use(cors({ origin: CORS_ALLOWED }));
 app.use(express.json());
+
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: CORS_ORIGIN } });
+const io = new Server(server, {
+  cors: { origin: CORS_ALLOWED }
+});
 
+// ------------------------------------------------------------
+// SALAS
+// ------------------------------------------------------------
 const rooms = {};
 
 // ------------------------------------------------------------
-// FUNÇÕES
+// FUNÇÕES AUXILIARES
 // ------------------------------------------------------------
 function generateRoomCode() {
   return Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -45,14 +74,12 @@ function normalize(s) {
     .trim();
 }
 
-// ✅ Pontuação por dica
 function pointsByHint(h) {
   if (h === 1) return 1000;
   if (h === 2) return 600;
   return 300;
 }
 
-// ✅ NOVO → Ranking agora ignora HOST e PROJETOR
 function rankingOf(room) {
   return Object.entries(room.players)
     .filter(([, p]) => p.name !== "Host" && p.name !== "PROJETOR")
@@ -60,12 +87,11 @@ function rankingOf(room) {
       socketId,
       name: p.name,
       team: p.team,
-      score: p.score ?? 0,
+      score: p.score ?? 0
     }))
     .sort((a, b) => b.score - a.score);
 }
 
-// ✅ Múltipla escolha
 function generateOptions(correctName) {
   const all = characters.map((c) => c.name);
   const wrong = all
@@ -93,7 +119,7 @@ function emitRanking(roomCode) {
 // SOCKET.IO
 // ------------------------------------------------------------
 io.on("connection", (socket) => {
-  // ✅ Criar sala
+  // Criar sala
   socket.on("room:create", ({ hostName = "Host", totalRounds = 6 }, cb) => {
     const code = generateRoomCode();
 
@@ -106,32 +132,30 @@ io.on("connection", (socket) => {
       totalRounds,
       round: null,
       timers: {},
-      lastRanking: [],
+      lastRanking: []
     };
 
     socket.join(code);
 
-    // ✅ Host entra como jogador mas NÃO aparece no ranking
     rooms[code].players[socket.id] = {
       name: "Host",
       team: "Host",
-      score: 0,
+      score: 0
     };
 
     cb?.({ roomCode: code });
 
     io.to(code).emit("room:state", {
       state: "lobby",
-      players: rooms[code].players,
+      players: rooms[code].players
     });
   });
 
-  // ✅ Entrar na sala
+  // Entrar na sala
   socket.on("room:join", ({ roomCode, name, team }, cb) => {
     const room = rooms[roomCode];
     if (!room) return cb?.({ error: "Sala não encontrada" });
 
-    // ✅ PROJETOR NÃO ENTRA COMO JOGADOR
     if (name === "PROJETOR") {
       socket.join(roomCode);
       return cb?.({ ok: true });
@@ -140,20 +164,20 @@ io.on("connection", (socket) => {
     room.players[socket.id] = {
       name: name || "Jogador",
       team: team || "Equipe",
-      score: 0,
+      score: 0
     };
 
     socket.join(roomCode);
 
     io.to(roomCode).emit("room:state", {
       state: room.state,
-      players: room.players,
+      players: room.players
     });
 
     cb?.({ ok: true });
   });
 
-  // ✅ Iniciar jogo
+  // Iniciar jogo
   socket.on("game:start", ({ roomCode }) => {
     const room = rooms[roomCode];
     if (!room || socket.id !== room.hostId) return;
@@ -167,7 +191,7 @@ io.on("connection", (socket) => {
     }, 3000);
   });
 
-  // ✅ Respostas
+  // Respostas
   socket.on("answer:send", ({ roomCode, answer }) => {
     const room = rooms[roomCode];
     if (!room || !room.round) return;
@@ -195,7 +219,7 @@ io.on("connection", (socket) => {
         socketId: socket.id,
         name: player.name,
         team: player.team,
-        points: pts,
+        points: pts
       });
 
       emitRanking(roomCode);
@@ -204,7 +228,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  // ✅ Desconectar
+  // Desconectar
   socket.on("disconnect", () => {
     for (const [code, room] of Object.entries(rooms)) {
       if (room.players[socket.id]) {
@@ -212,14 +236,14 @@ io.on("connection", (socket) => {
 
         io.to(code).emit("room:state", {
           state: room.state,
-          players: room.players,
+          players: room.players
         });
 
         if (room.hostId === socket.id) {
           delete rooms[code];
           io.to(code).emit("game:final", {
             podium: [],
-            ranking: [],
+            ranking: []
           });
         }
       }
@@ -228,7 +252,7 @@ io.on("connection", (socket) => {
 });
 
 // ------------------------------------------------------------
-// ROUND RÁPIDO
+// RODADA
 // ------------------------------------------------------------
 function nextRound(roomCode) {
   const room = rooms[roomCode];
@@ -242,7 +266,7 @@ function nextRound(roomCode) {
     io.to(roomCode).emit("game:final", {
       podium: ranking.slice(0, 3),
       top5: ranking.slice(0, 5),
-      ranking,
+      ranking
     });
     return;
   }
@@ -250,11 +274,10 @@ function nextRound(roomCode) {
   const ch = pickRandomCharacter(room.used);
   room.used.add(ch.id);
 
-  room.state = "playing";
   room.round = {
     correctName: ch.name,
     hintsRevealed: 0,
-    answers: {},
+    answers: {}
   };
 
   const options = generateOptions(ch.name);
@@ -262,7 +285,7 @@ function nextRound(roomCode) {
   io.to(roomCode).emit("round:start", {
     roundNumber: room.roundNumber,
     totalRounds: room.totalRounds,
-    options,
+    options
   });
 
   let index = 0;
@@ -271,7 +294,7 @@ function nextRound(roomCode) {
     if (index >= ch.hints.length) {
       io.to(roomCode).emit("round:reveal", {
         name: ch.name,
-        image: ch.image,
+        image: ch.image
       });
 
       return nextRound(roomCode);
@@ -282,7 +305,7 @@ function nextRound(roomCode) {
     io.to(roomCode).emit("round:hint", {
       hintNumber: index + 1,
       text: ch.hints[index],
-      duration: HINT_SECONDS,
+      duration: HINT_SECONDS
     });
 
     index++;
@@ -294,6 +317,9 @@ function nextRound(roomCode) {
   emitRanking(roomCode);
 }
 
+// ------------------------------------------------------------
+// INICIAR SERVIDOR
+// ------------------------------------------------------------
 server.listen(PORT, () => {
-  console.log(`✅ Server rodando em http://localhost:${PORT}`);
+  console.log(`🚀 Server rodando na porta ${PORT}`);
 });
