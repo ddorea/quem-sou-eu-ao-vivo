@@ -2,7 +2,7 @@ name: Deploy Vite Site
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -37,11 +37,11 @@ jobs:
         working-directory: ./client
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+      # 📌 Atenção: agora usamos SEMPRE v4
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: client/dist
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
