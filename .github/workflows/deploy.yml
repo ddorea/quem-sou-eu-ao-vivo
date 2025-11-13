@@ -2,7 +2,7 @@ name: Deploy Vite Site
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -10,21 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: ⚙️ Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm install
+        working-directory: ./client
 
-      - name: Build
+      - name: 🏗️ Build Vite project
         run: npm run build
+        working-directory: ./client
 
-      - name: Deploy to GitHub Pages
+      - name: 🚀 Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist
+          branch: gh-pages
+          folder: client/dist
