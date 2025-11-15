@@ -698,3 +698,35 @@ body {
   font-weight: 700;
   color: #ffe6a8;
 }
+
+/* ➤ Correção da barra */
+.timer-track {
+  height: 20px !important;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.timer-bar {
+  background: #ffd447;
+  height: 100%;
+  width: 100%;
+  transition-timing-function: linear;
+}
+
+/* ➤ Espaçamento maior do pódio */
+.podium-wrapper {
+  margin-top: 60px !important;
+}
+
+/* ➤ Nome mais claro no pódio */
+.podium-name {
+  color: #ffe9c7 !important;
+}
+
+.podium-score, .podium-winner-score {
+  color: #ffe6a8 !important;
+}
+
+/* ➤ Dicas mais separadas */
+.chip {
+  margin-bottom: 6px;
+}
