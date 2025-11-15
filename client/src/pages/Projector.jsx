@@ -102,7 +102,7 @@ export default function Projector() {
 
               <ul className="space-y-2">
                 {hints.map((h, i) => (
-                  <li key={i} className="chip p-3 rounded-xl">{`Pista ${i+1}: ${h}`}</li>
+                  <li key={i} className="chip p-3 rounded-xl">{`Pista ${i + 1}: ${h}`}</li>
                 ))}
               </ul>
             </div>
@@ -110,9 +110,9 @@ export default function Projector() {
             <div className="afro-card kente-border">
               <h2 className="text-2xl h2 mb-3">Ranking Parcial</h2>
               <ol className="space-y-2">
-                {rank.slice?.(0,5).map((r, i) => (
+                {rank.slice?.(0, 5).map((r, i) => (
                   <li key={r.socketId} className="chip rounded-xl p-3 flex justify-between">
-                    <span>{i+1}. {r.name}</span>
+                    <span>{i + 1}. {r.name}</span>
                     <span className="font-bold">{r.score} acertos</span>
                   </li>
                 ))}
@@ -162,7 +162,7 @@ export default function Projector() {
               <ol className="space-y-2">
                 {rank.charStats?.map((c, i) => (
                   <li key={c.id} className="chip p-3 rounded-xl flex justify-between">
-                    <span>{i+1}. {c.name}</span>
+                    <span>{i + 1}. {c.name}</span>
                     <span className="font-bold">{c.count} acertos</span>
                   </li>
                 )) || <li>Nenhum dado</li>}

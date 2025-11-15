@@ -8,16 +8,14 @@ export default function Play() {
 
   const [socket, setSocket] = useState(null);
   const [phase, setPhase] = useState("lobby");
-  const [status, setStatus] = useState("Aguardando…");
+  const [status, setStatus] = useState("Aguardando...");
   const [hints, setHints] = useState([]);
+  const [options, setOptions] = useState([]);
   const [rank, setRank] = useState([]);
   const [reveal, setReveal] = useState(null);
-  const [gapMsg, setGapMsg] = useState("");
-  const [options, setOptions] = useState([]);
-  const [roundTimer, setRoundTimer] = useState(0);
 
   const barRef = useRef(null);
-  const timerIntervalRef = useRef(null);
+  const timeRef = useRef(null);
 
   useEffect(() => {
     const s = getSocket();
@@ -28,20 +26,29 @@ export default function Play() {
 
     s.emit("room:join", { roomCode, name, team });
 
-    s.on("room:state", ({ state }) => setPhase(state));
-    s.on("game:countdown:start", ({ seconds }) => setStatus(`Começa em ${seconds}…`));
+    // count
+    s.on("game:countdown:start", ({ seconds }) => {
+      setPhase("countdown");
+      setStatus(seconds);
 
-    // Novo: round:start traz todas as pistas e a duração
-    s.on("round:start", ({ roundNumber, hints, duration, options }) => {
+      let n = seconds;
+      const int = setInterval(() => {
+        n--;
+        setStatus(n > 0 ? n : "...");
+        if (n <= 0) clearInterval(int);
+      }, 1000);
+    });
+
+    // ROUND — todas as pistas + opções + timer
+    s.on("round:start", ({ roundNumber, totalRounds, hints, duration, options }) => {
       setPhase("playing");
       setReveal(null);
-      setGapMsg("");
-      setStatus(`Round ${roundNumber}`);
-      setHints(hints || []);
-      setOptions(options || []);
-      setRoundTimer(duration || 0);
+      setStatus(`Round ${roundNumber}/${totalRounds}`);
 
-      // reset do timer visual
+      setHints(hints);
+      setOptions(options);
+
+      // BAR animation
       if (barRef.current) {
         barRef.current.style.transition = "none";
         barRef.current.style.width = "100%";
@@ -49,61 +56,33 @@ export default function Play() {
         barRef.current.style.transition = `width ${duration}s linear`;
         barRef.current.style.width = "0%";
       }
-
-      // start contador local
-      clearInterval(timerIntervalRef.current);
-      let t = duration || 0;
-      setRoundTimer(t);
-      timerIntervalRef.current = setInterval(() => {
-        t--;
-        setRoundTimer(t);
-        if (t <= 0) {
-          clearInterval(timerIntervalRef.current);
-        }
-      }, 1000);
     });
 
-    // Revelação
+    // REVEAL
     s.on("round:reveal", ({ name, image }) => {
       setReveal({ name, image });
       setPhase("reveal");
-      setOptions([]); // remove botões
-      clearInterval(timerIntervalRef.current);
-      if (barRef.current) {
-        barRef.current.style.transition = "none";
-        barRef.current.style.width = "0%";
-      }
+      setOptions([]);
     });
 
-    // Ranking parcial
+    // ranking
     s.on("ranking:update", ({ ranking }) => setRank(ranking));
 
-    // Mensagem individual (6º+)
-    s.on("intermission:you", ({ position, gapToNext }) => {
-      if (position >= 6) {
-        setGapMsg(`Você está a ${gapToNext} acertos do próximo colocado.`);
-      }
-    });
-
-    // Final de jogo
+    // final
     s.on("game:final", () => setPhase("final"));
 
-    return () => {
-      clearInterval(timerIntervalRef.current);
-      s.disconnect();
-    };
-  }, [roomCode]);
+    return () => s.disconnect();
+  }, []);
 
-  function sendChoice(choice) {
-    socket.emit("answer:send", { roomCode, answer: choice });
-    setOptions([]); // desabilita botões para evitar duplo clique
+  function choose(opt) {
+    socket.emit("answer:send", { roomCode, answer: opt });
+    setOptions([]); // trava
   }
 
   return (
     <div className="page-center bg-wakanda overlay animate-tribal">
-
       <div className="afro-card kente-border max-w-2xl w-full box-shadow-lift space-y-6">
-
+        
         <div className="flex justify-between">
           <h1 className="title-afro text-3xl">Sala {roomCode}</h1>
           <span className="chip">{status}</span>
@@ -111,40 +90,45 @@ export default function Play() {
 
         <hr className="hr-gold opacity-60" />
 
-        {/* REVELAÇÃO */}
+        {/* COUNTDOWN */}
+        {phase === "countdown" && (
+          <h1 className="text-center text-7xl animate-pulse font-extrabold">
+            {status}
+          </h1>
+        )}
+
+        {/* REVEAL */}
         {reveal && (
-          <div className="reveal-deluxe-wrapper">
+          <div className="text-center">
             <img
               src={import.meta.env.BASE_URL + reveal.image.replace(/^\//, "")}
-              alt={reveal.name}
-              className="reveal-deluxe-img"
+              className="reveal-deluxe-img mx-auto"
             />
-            <div className="reveal-deluxe-name">{reveal.name}</div>
+            <h2 className="text-3xl font-bold mt-4">{reveal.name}</h2>
           </div>
         )}
 
-        {/* EM JOGO */}
+        {/* PLAYING */}
         {phase === "playing" && (
           <>
-            {/* Timer */}
             <div className="timer-track">
               <div ref={barRef} className="timer-bar"></div>
             </div>
 
-            <div className="chip p-4 rounded-xl text-left">
-              {/* mostra todas as pistas de uma vez */}
+            <div className="space-y-2">
               {hints.map((h, i) => (
-                <div key={i}><b>Pista {i + 1}:</b> {h}</div>
+                <div key={i} className="chip p-3 rounded-xl">
+                  <b>Pista {i + 1}:</b> {h}
+                </div>
               ))}
             </div>
 
-            {/* Botões de múltipla escolha (aparecem junto com as pistas) */}
-            <div className="grid grid-cols-2 gap-4">
-              {options.map((opt, idx) => (
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              {options.map((opt, i) => (
                 <button
-                  key={idx}
+                  key={i}
                   className="btn-choice"
-                  onClick={() => sendChoice(opt)}
+                  onClick={() => choose(opt)}
                 >
                   {opt}
                 </button>
@@ -153,27 +137,27 @@ export default function Play() {
           </>
         )}
 
-        {/* INTERMISSION / FINAL */}
+        {/* FINAL */}
         {phase === "final" && (
-          <div className="chip p-4 rounded-xl text-center text-xl font-bold">
-            Fim da partida! Veja o pódio no projetor.
+          <div className="text-center text-xl p-4 chip">
+            A partida terminou! Veja o pódio no projetor.
           </div>
         )}
 
-        <h2 className="h2 text-2xl">Top 5</h2>
-        <ol className="space-y-2">
+        <h2 className="h2 text-2xl mt-4">Top 5</h2>
+        <ul className="space-y-2">
           {rank.slice(0, 5).map((r, i) => (
-            <li key={r.socketId} className="chip p-3 flex justify-between">
+            <li
+              key={r.socketId}
+              className="chip p-3 flex justify-between rounded-xl"
+            >
               <span>{i + 1}. {r.name}</span>
               <span>{r.score} acertos</span>
             </li>
           ))}
-        </ol>
-
-        {gapMsg && <div className="opacity-80 text-sm mt-2">{gapMsg}</div>}
+        </ul>
 
       </div>
-
     </div>
   );
 }
