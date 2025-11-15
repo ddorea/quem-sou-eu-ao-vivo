@@ -44,8 +44,12 @@ export default function Projector() {
         barRef.current.style.transition = "none";
         barRef.current.style.width = "100%";
         void barRef.current.offsetWidth;
-        barRef.current.style.transition = `width ${duration}s linear`;
-        barRef.current.style.width = "0%";
+
+        // micro-delay para garantir que a animação reinicia
+        setTimeout(() => {
+          barRef.current.style.transition = `width ${duration}s linear`;
+          barRef.current.style.width = "0%";
+        }, 20);
       }
 
       // limpa qualquer timer antigo
@@ -92,32 +96,20 @@ export default function Projector() {
         )}
 
         {phase === "playing" && (
-          <div className="grid md:grid-cols-2 gap-6 mt-6">
-            <div className="afro-card kente-border">
-              <h2 className="text-2xl h2 mb-3">Pistas</h2>
+          <div className="afro-card kente-border mt-6">
+            <h2 className="text-2xl h2 mb-3">Pistas</h2>
 
-              <div className="timer-track mb-3">
-                <div ref={barRef} className="timer-bar"></div>
-              </div>
-
-              <ul className="space-y-2">
-                {hints.map((h, i) => (
-                  <li key={i} className="chip p-3 rounded-xl">{`Pista ${i + 1}: ${h}`}</li>
-                ))}
-              </ul>
+            <div className="timer-track mb-4">
+              <div ref={barRef} className="timer-bar"></div>
             </div>
 
-            <div className="afro-card kente-border">
-              <h2 className="text-2xl h2 mb-3">Ranking Parcial</h2>
-              <ol className="space-y-2">
-                {rank.slice?.(0, 5).map((r, i) => (
-                  <li key={r.socketId} className="chip rounded-xl p-3 flex justify-between">
-                    <span>{i + 1}. {r.name}</span>
-                    <span className="font-bold">{r.score} acertos</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
+            <ul className="space-y-4">
+              {hints.map((h, i) => (
+                <li key={i} className="chip p-4 rounded-xl text-xl animate-tribal">
+                  {h}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 

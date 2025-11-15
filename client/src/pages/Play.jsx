@@ -11,11 +11,9 @@ export default function Play() {
   const [status, setStatus] = useState("Aguardando...");
   const [hints, setHints] = useState([]);
   const [options, setOptions] = useState([]);
-  const [rank, setRank] = useState([]);
   const [reveal, setReveal] = useState(null);
 
   const barRef = useRef(null);
-  const timeRef = useRef(null);
 
   useEffect(() => {
     const s = getSocket();
@@ -26,47 +24,46 @@ export default function Play() {
 
     s.emit("room:join", { roomCode, name, team });
 
-    // count
+    // countdown
     s.on("game:countdown:start", ({ seconds }) => {
       setPhase("countdown");
       setStatus(seconds);
 
       let n = seconds;
-      const int = setInterval(() => {
+      const interval = setInterval(() => {
         n--;
         setStatus(n > 0 ? n : "...");
-        if (n <= 0) clearInterval(int);
+        if (n <= 0) clearInterval(interval);
       }, 1000);
     });
 
-    // ROUND — todas as pistas + opções + timer
+    // start round
     s.on("round:start", ({ roundNumber, totalRounds, hints, duration, options }) => {
       setPhase("playing");
       setReveal(null);
+
       setStatus(`Round ${roundNumber}/${totalRounds}`);
 
       setHints(hints);
       setOptions(options);
 
-      // BAR animation
       if (barRef.current) {
         barRef.current.style.transition = "none";
         barRef.current.style.width = "100%";
         void barRef.current.offsetWidth;
-        barRef.current.style.transition = `width ${duration}s linear`;
-        barRef.current.style.width = "0%";
+        setTimeout(() => {
+          barRef.current.style.transition = `width ${duration}s linear`;
+          barRef.current.style.width = "0%";
+        }, 20);
       }
     });
 
-    // REVEAL
+    // reveal
     s.on("round:reveal", ({ name, image }) => {
       setReveal({ name, image });
       setPhase("reveal");
       setOptions([]);
     });
-
-    // ranking
-    s.on("ranking:update", ({ ranking }) => setRank(ranking));
 
     // final
     s.on("game:final", () => setPhase("final"));
@@ -74,15 +71,16 @@ export default function Play() {
     return () => s.disconnect();
   }, []);
 
-  function choose(opt) {
+  function answer(opt) {
     socket.emit("answer:send", { roomCode, answer: opt });
-    setOptions([]); // trava
+    setOptions([]);
   }
 
   return (
     <div className="page-center bg-wakanda overlay animate-tribal">
       <div className="afro-card kente-border max-w-2xl w-full box-shadow-lift space-y-6">
-        
+
+        {/* Header */}
         <div className="flex justify-between">
           <h1 className="title-afro text-3xl">Sala {roomCode}</h1>
           <span className="chip">{status}</span>
@@ -111,25 +109,21 @@ export default function Play() {
         {/* PLAYING */}
         {phase === "playing" && (
           <>
-            <div className="timer-track">
+            <div className="timer-track mb-4">
               <div ref={barRef} className="timer-bar"></div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-4">
               {hints.map((h, i) => (
-                <div key={i} className="chip p-3 rounded-xl">
+                <div key={i} className="chip p-4 rounded-xl text-lg">
                   <b>Pista {i + 1}:</b> {h}
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-2 gap-4 mt-6">
               {options.map((opt, i) => (
-                <button
-                  key={i}
-                  className="btn-choice"
-                  onClick={() => choose(opt)}
-                >
+                <button key={i} className="btn-choice" onClick={() => answer(opt)}>
                   {opt}
                 </button>
               ))}
@@ -143,19 +137,6 @@ export default function Play() {
             A partida terminou! Veja o pódio no projetor.
           </div>
         )}
-
-        <h2 className="h2 text-2xl mt-4">Top 5</h2>
-        <ul className="space-y-2">
-          {rank.slice(0, 5).map((r, i) => (
-            <li
-              key={r.socketId}
-              className="chip p-3 flex justify-between rounded-xl"
-            >
-              <span>{i + 1}. {r.name}</span>
-              <span>{r.score} acertos</span>
-            </li>
-          ))}
-        </ul>
 
       </div>
     </div>
