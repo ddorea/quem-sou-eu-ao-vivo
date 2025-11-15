@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 export default function Play() {
   const { roomCode } = useParams();
   const [params] = useSearchParams();
+
   const [socket, setSocket] = useState(null);
 
   const [phase, setPhase] = useState("lobby");
@@ -12,7 +13,8 @@ export default function Play() {
   const [hints, setHints] = useState([]);
   const [options, setOptions] = useState([]);
   const [reveal, setReveal] = useState(null);
-  const [feedback, setFeedback] = useState(null);
+
+  const [answerResult, setAnswerResult] = useState(null); // 🟢 novo
 
   const barRef = useRef(null);
 
@@ -25,104 +27,129 @@ export default function Play() {
 
     s.emit("room:join", { roomCode, name, team });
 
+    // ----------------------------------------
+    // COUNTDOWN
+    // ----------------------------------------
     s.on("game:countdown:start", ({ seconds }) => {
       setPhase("countdown");
-      let n = seconds;
-      setStatus(n);
+      setStatus(seconds);
 
-      const int = setInterval(() => {
+      let n = seconds;
+      const interval = setInterval(() => {
         n--;
         setStatus(n > 0 ? n : "...");
-        if (n <= 0) clearInterval(int);
+        if (n <= 0) clearInterval(interval);
       }, 1000);
     });
 
+    // ----------------------------------------
+    // START ROUND
+    // ----------------------------------------
     s.on("round:start", ({ roundNumber, totalRounds, hints, duration, options }) => {
       setPhase("playing");
       setReveal(null);
-      setFeedback(null);
 
       setStatus(`Round ${roundNumber}/${totalRounds}`);
-      setHints(hints);
-      setOptions(options);
 
+      setHints(hints || []);
+      setOptions(options || []);
+
+      // reinicia animação da barra
       if (barRef.current) {
         barRef.current.style.transition = "none";
         barRef.current.style.width = "100%";
         void barRef.current.offsetWidth;
-
         setTimeout(() => {
           barRef.current.style.transition = `width ${duration}s linear`;
           barRef.current.style.width = "0%";
-        }, 20);
+        }, 30);
       }
     });
 
+    // ----------------------------------------
+    // FEEDBACK DE RESPOSTA
+    // ----------------------------------------
+    s.on("answer:result", ({ correct }) => {
+      setAnswerResult(correct ? "ACERTOU!" : "ERROU!");
+
+      setTimeout(() => setAnswerResult(null), 2000);
+    });
+
+    // ----------------------------------------
+    // REVEAL
+    // ----------------------------------------
     s.on("round:reveal", ({ name, image }) => {
       setReveal({ name, image });
       setPhase("reveal");
       setOptions([]);
     });
 
-    s.on("answer:feedback", ({ ok }) => {
-      setFeedback(ok ? "ACERTOU! 🎉" : "ERROU ❌");
-
-      setTimeout(() => setFeedback(null), 2000);
-    });
-
+    // ----------------------------------------
+    // FINAL DO JOGO
+    // ----------------------------------------
     s.on("game:final", () => setPhase("final"));
 
     return () => s.disconnect();
   }, []);
 
+  // ----------------------------------------
+  // ENVIAR RESPOSTA
+  // ----------------------------------------
   function answer(opt) {
     socket.emit("answer:send", { roomCode, answer: opt });
-    setOptions([]);
+    setOptions([]); // desabilita botões após a resposta
   }
 
   return (
     <div className="page-center bg-wakanda overlay animate-tribal">
-      <div className="afro-card kente-border max-w-xl w-full space-y-6">
+      <div className="afro-card kente-border max-w-2xl w-full box-shadow-lift space-y-6">
 
-        <div className="flex justify-between">
+        {/* HEADER */}
+        <div className="flex justify-between items-center">
           <h1 className="title-afro text-3xl">Sala {roomCode}</h1>
           <span className="chip">{status}</span>
         </div>
 
         <hr className="hr-gold opacity-60" />
 
-        {/* CONTAGEM */}
+        {/* COUNTDOWN */}
         {phase === "countdown" && (
-          <h1 className="text-center text-7xl font-black animate-pulse">
+          <h1 className="text-center text-7xl animate-pulse font-extrabold">
             {status}
           </h1>
         )}
 
-        {/* REVELAÇÃO */}
-        {reveal && (
-          <div className="reveal-wrapper">
+        {/* REVEAL */}
+        {phase === "reveal" && reveal && (
+          <div className="text-center">
             <img
               src={import.meta.env.BASE_URL + reveal.image.replace(/^\//, "")}
-              className="reveal-img-big"
+              className="reveal-deluxe-img mx-auto"
             />
-            <div className="reveal-name">{reveal.name}</div>
+            <h2 className="text-3xl font-bold mt-4">{reveal.name}</h2>
           </div>
         )}
 
-        {/* FEEDBACK */}
-        {feedback && (
-          <div className={`text-center text-3xl font-bold ${feedback.includes("ERROU") ? "text-red-400" : "text-green-300"}`}>
-            {feedback}
-          </div>
-        )}
-
-        {/* RODANDO */}
+        {/* PLAYING */}
         {phase === "playing" && (
           <>
+            {/* Barra de tempo */}
             <div className="timer-track mb-4">
               <div ref={barRef} className="timer-bar"></div>
             </div>
 
+            {/* FEEDBACK ACERTOU/ERROU */}
+            {answerResult && (
+              <div
+                className={`text-center text-4xl font-extrabold mb-4 ${
+                  answerResult === "ACERTOU!" ? "text-green-400" : "text-red-400"
+                } animate-pulse`}
+              >
+                {answerResult}
+              </div>
+            )}
+
+            {/* Pistas */}
             <div className="space-y-4">
               {hints.map((h, i) => (
                 <div key={i} className="chip p-4 rounded-xl text-lg">
@@ -131,6 +158,7 @@ export default function Play() {
               ))}
             </div>
 
+            {/* Botões de resposta */}
             <div className="grid grid-cols-2 gap-4 mt-6">
               {options.map((opt, i) => (
                 <button key={i} className="btn-choice" onClick={() => answer(opt)}>
@@ -141,12 +169,13 @@ export default function Play() {
           </>
         )}
 
-        {/* FIM */}
+        {/* FINAL */}
         {phase === "final" && (
           <div className="text-center text-xl p-4 chip">
             A partida terminou! Veja o pódio no projetor.
           </div>
         )}
+
       </div>
     </div>
   );

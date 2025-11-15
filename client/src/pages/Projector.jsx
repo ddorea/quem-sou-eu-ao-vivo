@@ -157,7 +157,7 @@ export default function Projector() {
             </div>
 
             {/* Estatísticas */}
-            <div className="mt-10 afro-card kente-border">
+            <div className="mt-20 afro-card kente-border">
               <h3 className="text-3xl mb-4">Personagens mais acertados</h3>
               <ol className="space-y-2">
                 {finalData.charStats.map((c, i) => (
