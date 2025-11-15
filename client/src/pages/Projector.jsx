@@ -12,105 +12,87 @@ export default function Projector() {
   const [rank, setRank] = useState([]);
   const [reveal, setReveal] = useState(null);
   const barRef = useRef(null);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     const s = getSocket();
     setSocket(s);
-
-    // ✅ O projetor entra sempre como VISUAL
     s.emit("room:join", { roomCode, name: "PROJETOR", team: "VISUAL" });
 
-    // ✅ Estado da sala
     s.on("room:state", ({ state }) => setPhase(state || "lobby"));
 
-    // ✅ CONTAGEM REGRESSIVA LOCAL (SEM BUGAR NO 1)
     s.on("game:countdown:start", ({ seconds }) => {
       setPhase("countdown");
+      setStatus(String(seconds));
       let n = seconds;
-
-      setStatus(n);
-
-      const interval = setInterval(() => {
+      const intr = setInterval(() => {
         n--;
-        if (n <= 0) {
-          clearInterval(interval);
-          setStatus("...");
-          return;
-        }
-        setStatus(n);
+        setStatus(String(n > 0 ? n : "..."));
+        if (n <= 0) clearInterval(intr);
       }, 1000);
     });
 
-    // ✅ Novo round
-    s.on("round:start", ({ roundNumber, totalRounds }) => {
+    // Novo: round:start tem todas as pistas e duration
+    s.on("round:start", ({ roundNumber, totalRounds, hints, duration }) => {
       setPhase("playing");
-      setHints([]);
+      setHints(hints || []);
       setReveal(null);
       setStatus(`Round ${roundNumber}/${totalRounds}`);
 
-      // reset da barra
+      // anima a barra
       if (barRef.current) {
         barRef.current.style.transition = "none";
         barRef.current.style.width = "100%";
         void barRef.current.offsetWidth;
+        barRef.current.style.transition = `width ${duration}s linear`;
+        barRef.current.style.width = "0%";
+      }
+
+      // limpa qualquer timer antigo
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
     });
 
-    // ✅ Pistas chegando + barra
-    s.on("round:hint", ({ hintNumber, text, duration }) => {
-      setPhase("playing");
-      setHints((prev) => [...prev, `Pista ${hintNumber}: ${text}`]);
+    s.on("round:reveal", ({ name, image }) => {
+      setPhase("reveal");
+      setReveal({ name, image });
 
-      // Barra recomeça a cada dica
+      // garantir a barra a 0
       if (barRef.current) {
         barRef.current.style.transition = "none";
-        barRef.current.style.width = "100%";
-        void barRef.current.offsetWidth;
-
-        barRef.current.style.transition = `width ${duration}s linear`;
         barRef.current.style.width = "0%";
       }
     });
 
-    // ✅ Revelação DELUXE
-    s.on("round:reveal", ({ name, image }) => {
-      setPhase("reveal");
-      setReveal({ name, image });
-    });
-
-    // ✅ Atualização de ranking parcial
     s.on("ranking:update", ({ ranking }) => setRank(ranking));
 
-    // ✅ Final do jogo
-    s.on("game:final", ({ podium, top5, ranking }) => {
+    s.on("game:final", ({ podium, top5, ranking, charStats }) => {
       setPhase("final");
-      setRank({ podium, top5, ranking });
+      setRank({ podium, top5, ranking, charStats });
     });
 
-    return () => s.disconnect();
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      s.disconnect();
+    };
   }, [roomCode]);
 
   return (
     <div className="min-h-screen bg-wakanda overlay p-6 animate-tribal flex justify-center">
       <div className="max-w-6xl w-full">
-
         <h1 className="text-5xl title-afro text-center">Quem Sou Eu — Projetor</h1>
-        <p className="text-center opacity-90 mt-2">
-          Sala {roomCode} — {status}
-        </p>
+        <p className="text-center opacity-90 mt-2">Sala {roomCode} — {status}</p>
 
-        {/* ✅ Countdown grande */}
         {phase === "countdown" && (
           <div className="mt-10 afro-card kente-border text-center">
             <div className="text-8xl font-black animate-pulse">{status}</div>
-            <div className="opacity-75 mt-2 text-xl">Preparem-se…</div>
+            <div className="mt-2 opacity-80">Preparem-se…</div>
           </div>
         )}
 
-        {/* ✅ Durante o round — Pistas + Barra */}
         {phase === "playing" && (
           <div className="grid md:grid-cols-2 gap-6 mt-6">
-
             <div className="afro-card kente-border">
               <h2 className="text-2xl h2 mb-3">Pistas</h2>
 
@@ -120,28 +102,25 @@ export default function Projector() {
 
               <ul className="space-y-2">
                 {hints.map((h, i) => (
-                  <li key={i} className="chip p-3 rounded-xl animate-tribal">{h}</li>
+                  <li key={i} className="chip p-3 rounded-xl">{`Pista ${i+1}: ${h}`}</li>
                 ))}
               </ul>
             </div>
 
             <div className="afro-card kente-border">
               <h2 className="text-2xl h2 mb-3">Ranking Parcial</h2>
-
               <ol className="space-y-2">
-                {rank.slice(0, 5).map((r, i) => (
+                {rank.slice?.(0,5).map((r, i) => (
                   <li key={r.socketId} className="chip rounded-xl p-3 flex justify-between">
-                    <span>{i + 1}. {r.name}</span>
-                    <span className="font-bold">{r.score} pts</span>
+                    <span>{i+1}. {r.name}</span>
+                    <span className="font-bold">{r.score} acertos</span>
                   </li>
                 ))}
               </ol>
             </div>
-
           </div>
         )}
 
-        {/* ✅ Revelação DELUXE */}
         {phase === "reveal" && reveal && (
           <div className="reveal-deluxe-wrapper" style={{ margin: "0 auto", maxWidth: "900px" }}>
             <img
@@ -149,45 +128,49 @@ export default function Projector() {
               className="reveal-deluxe-img"
               alt={reveal.name}
             />
-            <div className="reveal-deluxe-name" style={{ fontSize: "3rem" }}>
-              {reveal.name}
-            </div>
+            <div className="reveal-deluxe-name" style={{ fontSize: "3rem" }}>{reveal.name}</div>
           </div>
         )}
 
-        {/* ✅ Tela final */}
         {phase === "final" && rank?.podium && (
-          <div className="mt-20">
+          <div className="mt-10">
+            <h2 className="text-4xl title-afro text-center mb-8">Pódio Final</h2>
 
-            <h2 className="text-5xl title-afro text-center mb-20">🏆 Pódio Final 🏆</h2>
-
-            <div className="flex justify-center items-end gap-6 podium-wrapper">
-              {/* Segundo Lugar */}
-              <div className="podium-card podium-second">
-                <div className="medal-icon">🥈</div>
-                <div className="podium-name">{rank.podium[1]?.name || "-"}</div>
-                <div className="podium-score">{rank.podium[1]?.score ?? 0} pts</div>
+            <div className="podium">
+              <div className="place">
+                <div className="medal">🥈</div>
+                <div className="font-bold mt-1">{rank.podium[1]?.name || "-"}</div>
+                <div className="opacity-80">{rank.podium[1]?.score} acertos</div>
               </div>
 
-              {/* Primeiro Lugar */}
-              <div className="podium-card podium-first">
-                <div className="medal-icon">🥇</div>
-                <div className="podium-name podium-winner">{rank.podium[0]?.name || "-"}</div>
-                <div className="podium-score podium-winner-score">
-                  {rank.podium[0]?.score ?? 0} pts
-                </div>
+              <div className="place first neon-gold">
+                <div className="medal">🥇</div>
+                <div className="font-bold mt-1 text-xl">{rank.podium[0]?.name || "-"}</div>
+                <div className="opacity-90 font-semibold">{rank.podium[0]?.score} acertos</div>
               </div>
 
-              {/* Terceiro Lugar */}
-              <div className="podium-card podium-third">
-                <div className="medal-icon">🥉</div>
-                <div className="podium-name">{rank.podium[2]?.name || "-"}</div>
-                <div className="podium-score">{rank.podium[2]?.score ?? 0} pts</div>
+              <div className="place">
+                <div className="medal">🥉</div>
+                <div className="font-bold mt-1">{rank.podium[2]?.name || "-"}</div>
+                <div className="opacity-80">{rank.podium[2]?.score} acertos</div>
               </div>
             </div>
 
+            {/* stats de personagens mais acertados */}
+            <div className="mt-6 afro-card kente-border">
+              <h3 className="text-2xl mb-3">Personagens mais acertados</h3>
+              <ol className="space-y-2">
+                {rank.charStats?.map((c, i) => (
+                  <li key={c.id} className="chip p-3 rounded-xl flex justify-between">
+                    <span>{i+1}. {c.name}</span>
+                    <span className="font-bold">{c.count} acertos</span>
+                  </li>
+                )) || <li>Nenhum dado</li>}
+              </ol>
+            </div>
           </div>
         )}
+
       </div>
     </div>
   );

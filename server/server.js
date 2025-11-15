@@ -10,18 +10,14 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 // ------------------------------------------------------------
-// CONFIGURAÇÃO DE PATHS (necessário no Render)
-// ------------------------------------------------------------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ------------------------------------------------------------
-// VARIÁVEIS DE AMBIENTE
-// ------------------------------------------------------------
 const PORT = process.env.PORT || 4000;
-const HINT_SECONDS = Number(process.env.ROUND_SECONDS_PER_HINT || 15);
+// tempo do round em segundos (usado como tempo geral do round)
+const HINT_SECONDS = Number(process.env.ROUND_SECONDS_PER_HINT || 20);
 
-// 🔥 CORS LIBERADO PARA PRODUÇÃO
+// CORS permitido (ajuste se necessário)
 const CORS_ALLOWED = [
   "http://localhost:5173",
   "https://ddorea.github.io",
@@ -31,8 +27,7 @@ const CORS_ALLOWED = [
 console.log("🔧 CORS permitido:", CORS_ALLOWED);
 
 // ------------------------------------------------------------
-// CARREGAR PERSONAGENS (corrige erro de path no Render)
-// ------------------------------------------------------------
+// carregar characters.json
 const charactersPath = path.join(__dirname, "characters.json");
 const characters = JSON.parse(fs.readFileSync(charactersPath, "utf-8"));
 
@@ -48,13 +43,11 @@ const io = new Server(server, {
 });
 
 // ------------------------------------------------------------
-// SALAS
-// ------------------------------------------------------------
+// rooms
 const rooms = {};
 
 // ------------------------------------------------------------
-// FUNÇÕES AUXILIARES
-// ------------------------------------------------------------
+// util helpers
 function generateRoomCode() {
   return Math.random().toString(36).substring(2, 6).toUpperCase();
 }
@@ -74,12 +67,7 @@ function normalize(s) {
     .trim();
 }
 
-function pointsByHint(h) {
-  if (h === 1) return 1000;
-  if (h === 2) return 600;
-  return 300;
-}
-
+// ranking agora usa 'score' = número de acertos
 function rankingOf(room) {
   return Object.entries(room.players)
     .filter(([, p]) => p.name !== "Host" && p.name !== "PROJETOR")
@@ -87,7 +75,7 @@ function rankingOf(room) {
       socketId,
       name: p.name,
       team: p.team,
-      score: p.score ?? 0
+      score: p.corrects ?? 0
     }))
     .sort((a, b) => b.score - a.score);
 }
@@ -116,10 +104,9 @@ function emitRanking(roomCode) {
 }
 
 // ------------------------------------------------------------
-// SOCKET.IO
-// ------------------------------------------------------------
+// socket.io events
 io.on("connection", (socket) => {
-  // Criar sala
+  // criar sala
   socket.on("room:create", ({ hostName = "Host", totalRounds = 6 }, cb) => {
     const code = generateRoomCode();
 
@@ -132,15 +119,18 @@ io.on("connection", (socket) => {
       totalRounds,
       round: null,
       timers: {},
-      lastRanking: []
+      lastRanking: [],
+      // estatísticas por personagem: { characterId: count }
+      charStats: {}
     };
 
     socket.join(code);
 
+    // host entra como jogador (mas é filtrado do ranking)
     rooms[code].players[socket.id] = {
       name: "Host",
       team: "Host",
-      score: 0
+      corrects: 0
     };
 
     cb?.({ roomCode: code });
@@ -151,11 +141,12 @@ io.on("connection", (socket) => {
     });
   });
 
-  // Entrar na sala
+  // entrar na sala
   socket.on("room:join", ({ roomCode, name, team }, cb) => {
     const room = rooms[roomCode];
     if (!room) return cb?.({ error: "Sala não encontrada" });
 
+    // projetor entra apenas na sala (não é jogador)
     if (name === "PROJETOR") {
       socket.join(roomCode);
       return cb?.({ ok: true });
@@ -164,7 +155,7 @@ io.on("connection", (socket) => {
     room.players[socket.id] = {
       name: name || "Jogador",
       team: team || "Equipe",
-      score: 0
+      corrects: 0
     };
 
     socket.join(roomCode);
@@ -177,7 +168,7 @@ io.on("connection", (socket) => {
     cb?.({ ok: true });
   });
 
-  // Iniciar jogo
+  // iniciar jogo
   socket.on("game:start", ({ roomCode }) => {
     const room = rooms[roomCode];
     if (!room || socket.id !== room.hostId) return;
@@ -191,7 +182,7 @@ io.on("connection", (socket) => {
     }, 3000);
   });
 
-  // Respostas
+  // resposta do jogador (múltipla escolha)
   socket.on("answer:send", ({ roomCode, answer }) => {
     const room = rooms[roomCode];
     if (!room || !room.round) return;
@@ -199,6 +190,7 @@ io.on("connection", (socket) => {
     const player = room.players[socket.id];
     if (!player) return;
 
+    // evita múltiplas respostas do mesmo jogador no round
     if (room.round.answers[socket.id]) return;
 
     const given = normalize(answer);
@@ -212,23 +204,25 @@ io.on("connection", (socket) => {
       given.includes(correct);
 
     if (ok) {
-      const pts = pointsByHint(room.round.hintsRevealed);
-      player.score += pts;
+      // marca acerto (1 ponto por personagem)
+      player.corrects = (player.corrects || 0) + 1;
+
+      // incrementa estatística da sala para esse personagem
+      room.charStats[room.round.characterId] = (room.charStats[room.round.characterId] || 0) + 1;
 
       io.to(roomCode).emit("answer:correct", {
         socketId: socket.id,
         name: player.name,
-        team: player.team,
-        points: pts
+        team: player.team
       });
 
       emitRanking(roomCode);
     } else {
-      socket.emit("answer:received", { ok: true });
+      socket.emit("answer:received", { ok: false });
     }
   });
 
-  // Desconectar
+  // desconexão
   socket.on("disconnect", () => {
     for (const [code, room] of Object.entries(rooms)) {
       if (room.players[socket.id]) {
@@ -243,7 +237,9 @@ io.on("connection", (socket) => {
           delete rooms[code];
           io.to(code).emit("game:final", {
             podium: [],
-            ranking: []
+            top5: [],
+            ranking: [],
+            charStats: []
           });
         }
       }
@@ -252,8 +248,7 @@ io.on("connection", (socket) => {
 });
 
 // ------------------------------------------------------------
-// RODADA
-// ------------------------------------------------------------
+// rodada (com envio de todas as pistas de uma vez e 1 timer geral)
 function nextRound(roomCode) {
   const room = rooms[roomCode];
   if (!room) return;
@@ -263,10 +258,20 @@ function nextRound(roomCode) {
   room.roundNumber++;
   if (room.roundNumber > room.totalRounds) {
     const ranking = rankingOf(room);
+
+    // montar charStats ordenado por mais acertados
+    const charStatsArray = Object.entries(room.charStats || {})
+      .map(([id, count]) => {
+        const ch = characters.find((c) => c.id === id);
+        return { id, name: ch?.name || id, count };
+      })
+      .sort((a, b) => b.count - a.count);
+
     io.to(roomCode).emit("game:final", {
       podium: ranking.slice(0, 3),
       top5: ranking.slice(0, 5),
-      ranking
+      ranking,
+      charStats: charStatsArray
     });
     return;
   }
@@ -274,51 +279,41 @@ function nextRound(roomCode) {
   const ch = pickRandomCharacter(room.used);
   room.used.add(ch.id);
 
+  room.state = "playing";
   room.round = {
+    characterId: ch.id,
     correctName: ch.name,
-    hintsRevealed: 0,
+    hintsRevealed: ch.hints.length,
     answers: {}
   };
 
   const options = generateOptions(ch.name);
 
+  // Envia o start com todas as pistas de uma vez e a duração do round
   io.to(roomCode).emit("round:start", {
     roundNumber: room.roundNumber,
     totalRounds: room.totalRounds,
+    hints: ch.hints, // todas as pistas de uma vez
+    duration: HINT_SECONDS,
     options
   });
 
-  let index = 0;
-
-  const sendHint = () => {
-    if (index >= ch.hints.length) {
-      io.to(roomCode).emit("round:reveal", {
-        name: ch.name,
-        image: ch.image
-      });
-
-      return nextRound(roomCode);
-    }
-
-    room.round.hintsRevealed = index + 1;
-
-    io.to(roomCode).emit("round:hint", {
-      hintNumber: index + 1,
-      text: ch.hints[index],
-      duration: HINT_SECONDS
+  // agenda a revelação quando o tempo do round acabar
+  room.timers.hintInterval = setTimeout(() => {
+    io.to(roomCode).emit("round:reveal", {
+      name: ch.name,
+      image: ch.image
     });
 
-    index++;
-    room.timers.hintInterval = setTimeout(sendHint, HINT_SECONDS * 1000);
-  };
-
-  sendHint();
+    // espera 5s para mostrar a revelação e então inicia o próximo round
+    room.timers.nextTimeout = setTimeout(() => {
+      nextRound(roomCode);
+    }, 5000);
+  }, HINT_SECONDS * 1000);
 
   emitRanking(roomCode);
 }
 
-// ------------------------------------------------------------
-// INICIAR SERVIDOR
 // ------------------------------------------------------------
 server.listen(PORT, () => {
   console.log(`🚀 Server rodando na porta ${PORT}`);

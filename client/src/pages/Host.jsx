@@ -6,11 +6,15 @@ export default function Host() {
   const [roomCode, setRoomCode] = useState("");
   const [players, setPlayers] = useState({});
   const [rounds, setRounds] = useState(6);
+  const [finalStats, setFinalStats] = useState(null);
 
   useEffect(() => {
     const s = getSocket();
     setSocket(s);
     s.on("room:state", ({ players }) => setPlayers(players));
+    s.on("game:final", ({ charStats }) => {
+      setFinalStats(charStats || null);
+    });
     return () => s.disconnect();
   }, []);
 
@@ -18,12 +22,16 @@ export default function Host() {
     socket.emit(
       "room:create",
       { hostName: "Host", totalRounds: rounds },
-      ({ roomCode }) => setRoomCode(roomCode)
+      ({ roomCode }) => {
+        setRoomCode(roomCode);
+        setFinalStats(null);
+      }
     );
   }
 
   function startGame() {
     socket.emit("game:start", { roomCode });
+    setFinalStats(null);
   }
 
   function openProjector() {
@@ -71,7 +79,7 @@ export default function Host() {
                 .map((p, i) => (
                   <li key={i} className="chip rounded-xl p-3 flex justify-between">
                     <span>{p.name}</span>
-                    <span>{p.score ?? 0} pts</span>
+                    <span>{p.corrects ?? 0} acertos</span>
                   </li>
                 ))}
             </ul>
@@ -91,6 +99,22 @@ export default function Host() {
                 Abrir Projetor
               </button>
             </div>
+
+            {/* mostra estatísticas de personagens após a partida, se existirem */}
+            {finalStats && (
+              <>
+                <hr className="hr-gold opacity-40 mt-4" />
+                <h2 className="h2 text-2xl mt-2">Personagens mais acertados</h2>
+                <ol className="space-y-2">
+                  {finalStats.map((c, i) => (
+                    <li key={c.id} className="chip p-3 rounded-xl flex justify-between">
+                      <span>{i+1}. {c.name}</span>
+                      <span className="font-bold">{c.count} acertos</span>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
           </>
         )}
 
