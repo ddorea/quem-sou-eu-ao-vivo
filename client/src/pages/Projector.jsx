@@ -7,72 +7,91 @@ export default function Projector() {
   const [socket, setSocket] = useState(null);
 
   const [phase, setPhase] = useState("lobby");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("Aguardando...");
   const [hints, setHints] = useState([]);
   const [reveal, setReveal] = useState(null);
-  const [finalData, setFinalData] = useState(null);
-
   const barRef = useRef(null);
 
   useEffect(() => {
     const s = getSocket();
     setSocket(s);
 
-    s.emit("room:join", { roomCode, name: "PROJETOR" });
+    s.emit("room:join", { roomCode, name: "PROJETOR", team: "VISUAL" });
 
+    // Estado da sala
+    s.on("room:state", ({ state }) => setPhase(state || "lobby"));
+
+    // COUNTDOWN
     s.on("game:countdown:start", ({ seconds }) => {
       setPhase("countdown");
-      setStatus(seconds);
       let n = seconds;
+      setStatus(String(n));
 
-      const timer = setInterval(() => {
+      const interval = setInterval(() => {
         n--;
-        setStatus(n > 0 ? n : "...");
-        if (n <= 0) clearInterval(timer);
+        setStatus(n > 0 ? String(n) : "...");
+        if (n <= 0) clearInterval(interval);
       }, 1000);
     });
 
+    // ROUND START
     s.on("round:start", ({ roundNumber, totalRounds, hints, duration }) => {
       setPhase("playing");
+      setHints(hints || []);
       setReveal(null);
-      setHints(hints);
       setStatus(`Round ${roundNumber}/${totalRounds}`);
 
       if (barRef.current) {
         barRef.current.style.transition = "none";
         barRef.current.style.width = "100%";
         void barRef.current.offsetWidth;
+
         setTimeout(() => {
           barRef.current.style.transition = `width ${duration}s linear`;
           barRef.current.style.width = "0%";
-        }, 25);
+        }, 20);
       }
     });
 
+    // REVELAÇÃO DELUXE
     s.on("round:reveal", ({ name, image }) => {
       setPhase("reveal");
       setReveal({ name, image });
+
+      if (barRef.current) {
+        barRef.current.style.transition = "none";
+        barRef.current.style.width = "0%";
+      }
     });
 
-    s.on("game:final", (data) => {
+    // FINAL
+    s.on("game:final", ({ podium, ranking, charStats }) => {
       setPhase("final");
-      setFinalData(data);
+      setReveal(null);
+      setStatus("Fim!");
+      setHints([]);
+      window.finalData = { podium, ranking, charStats };
     });
 
     return () => s.disconnect();
-  }, []);
+  }, [roomCode]);
+
+  const final = window.finalData;
 
   return (
     <div className="min-h-screen bg-wakanda overlay p-6 animate-tribal flex justify-center">
       <div className="max-w-6xl w-full">
 
         <h1 className="text-5xl title-afro text-center">Quem Sou Eu — Projetor</h1>
-        <p className="text-center opacity-90 mt-2">{status}</p>
+        <p className="text-center opacity-90 mt-2">
+          Sala {roomCode} — {status}
+        </p>
 
         {/* COUNTDOWN */}
         {phase === "countdown" && (
-          <div className="mt-10 text-center text-8xl font-black animate-pulse">
-            {status}
+          <div className="mt-10 afro-card kente-border text-center">
+            <div className="text-8xl font-black animate-pulse">{status}</div>
+            <div className="mt-2 opacity-80 text-xl">Preparem-se…</div>
           </div>
         )}
 
@@ -95,65 +114,62 @@ export default function Projector() {
           </div>
         )}
 
-        {/* REVEAL */}
+        {/* ✨ REVELAÇÃO DELUXE ANTIGA — RESTAURADA */}
         {phase === "reveal" && reveal && (
-          <div className="mt-10 text-center">
+          <div className="reveal-deluxe-wrapper" style={{ margin: "40px auto", maxWidth: "900px" }}>
             <img
               src={import.meta.env.BASE_URL + reveal.image.replace(/^\//, "")}
-              className="reveal-deluxe-img mx-auto"
+              alt={reveal.name}
+              className="reveal-deluxe-img"
             />
-            <h2 className="text-4xl font-bold mt-4">{reveal.name}</h2>
-
-            <button
-              className="btn-primary mt-10 px-8 py-3 rounded-xl text-xl"
-              onClick={() => socket.emit("round:skip", { roomCode })}
-            >
-              ⏭ Pular para o próximo round
-            </button>
+            <div className="reveal-deluxe-name">{reveal.name}</div>
           </div>
         )}
 
         {/* FINAL */}
-        {phase === "final" && finalData && (
-          <div className="mt-16">
-            
+        {phase === "final" && final && (
+          <div className="mt-20">
+
             <h2 className="text-5xl title-afro text-center mb-12">🏆 Pódio Final 🏆</h2>
 
-            <div className="flex justify-center items-end gap-10 podium-wrapper">
+            <div className="podium-wrapper flex justify-center items-end gap-6">
 
-              {/* Segundo */}
+              {/* 2º lugar */}
               <div className="podium-card podium-second">
                 <div className="medal-icon">🥈</div>
-                <div className="podium-name">{finalData.podium[1]?.name || "-"}</div>
-                <div className="podium-score">{finalData.podium[1]?.corrects || 0} acertos</div>
+                <div className="podium-name">{final.podium[1]?.name || "-"}</div>
+                <div className="podium-score">{final.podium[1]?.corrects ?? 0} acertos</div>
               </div>
 
-              {/* Primeiro */}
+              {/* 1º lugar */}
               <div className="podium-card podium-first">
                 <div className="medal-icon">🥇</div>
-                <div className="podium-name podium-winner">{finalData.podium[0]?.name || "-"}</div>
-                <div className="podium-score podium-winner-score">
-                  {finalData.podium[0]?.corrects || 0} acertos
+                <div className="podium-name podium-winner">{final.podium[0]?.name || "-"}</div>
+                <div className="podium-winner-score">
+                  {final.podium[0]?.corrects ?? 0} acertos
                 </div>
               </div>
 
-              {/* Terceiro */}
+              {/* 3º lugar */}
               <div className="podium-card podium-third">
                 <div className="medal-icon">🥉</div>
-                <div className="podium-name">{finalData.podium[2]?.name || "-"}</div>
-                <div className="podium-score">{finalData.podium[2]?.corrects || 0} acertos</div>
+                <div className="podium-name">{final.podium[2]?.name || "-"}</div>
+                <div className="podium-score">{final.podium[2]?.corrects ?? 0} acertos</div>
               </div>
 
             </div>
 
-            {/* espaçamento extra */}
-            <div className="mt-20 afro-card kente-border">
+            {/* Espaço entre pódio e ranking de personagens */}
+            <div style={{ marginTop: "60px" }} />
+
+            <div className="afro-card kente-border p-6 mt-6">
               <h3 className="text-3xl mb-4">Personagens mais acertados</h3>
-              <ol className="space-y-3">
-                {finalData.charStats.map((c, i) => (
-                  <li key={c.id} className="chip p-3 rounded-xl flex justify-between text-xl">
+
+              <ol className="space-y-2">
+                {final.charStats.map((c, i) => (
+                  <li key={i} className="chip p-3 rounded-xl flex justify-between">
                     <span>{i + 1}. {c.name}</span>
-                    <span>{c.count} acertos</span>
+                    <span className="font-bold">{c.count} acertos</span>
                   </li>
                 ))}
               </ol>
