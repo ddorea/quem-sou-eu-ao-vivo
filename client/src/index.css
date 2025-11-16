@@ -24,17 +24,19 @@
 .overlay {
   position: relative;
 }
+
 .overlay::before {
   content: "";
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(2px);
   z-index: 0;
 }
-.overlay > * {
+
+.overlay>* {
   position: relative;
   z-index: 1;
 }
@@ -43,7 +45,8 @@
    CENTRALIZAÇÃO REAL — CORREÇÃO TOTAL
    ============================================================ */
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -66,8 +69,8 @@ html, body {
 
 .afro-card {
   @apply rounded-2xl shadow-2xl p-6;
-  background: rgba(32,20,14,0.88);
-  border: 1px solid rgba(249,210,123,0.45);
+  background: rgba(32, 20, 14, 0.88);
+  border: 1px solid rgba(249, 210, 123, 0.45);
   backdrop-filter: blur(8px);
 }
 
@@ -100,8 +103,8 @@ html, body {
    ============================================================ */
 
 .chip {
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(249,210,123,0.35);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(249, 210, 123, 0.35);
   padding: 10px 14px;
   border-radius: 12px;
   font-size: 1.15rem;
@@ -111,8 +114,8 @@ html, body {
 
 .input-afro {
   @apply rounded-xl px-3 py-2;
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(249,210,123,0.35);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(249, 210, 123, 0.35);
   color: white;
 }
 
@@ -123,8 +126,8 @@ html, body {
 .btn-primary {
   color: #2A1A12 !important;
   background: linear-gradient(90deg, #F9D27B, #D4A373);
-  border: 1px solid rgba(249,210,123,0.55);
-  box-shadow: 0 6px 18px rgba(249,210,123,0.30);
+  border: 1px solid rgba(249, 210, 123, 0.55);
+  box-shadow: 0 6px 18px rgba(249, 210, 123, 0.30);
   font-size: 1.25rem;
   padding: 14px 24px;
   border-radius: 14px;
@@ -132,7 +135,7 @@ html, body {
 
 .btn-secondary {
   background: #704214;
-  border: 1px solid rgba(212,163,115,0.45);
+  border: 1px solid rgba(212, 163, 115, 0.45);
   font-size: 1.25rem;
   padding: 14px 24px;
   border-radius: 14px;
@@ -140,7 +143,7 @@ html, body {
 }
 
 .btn-ghost {
-  border: 1px solid rgba(212,163,115,0.60);
+  border: 1px solid rgba(212, 163, 115, 0.60);
   font-size: 1.25rem;
   padding: 14px 24px;
   border-radius: 14px;
@@ -154,7 +157,7 @@ html, body {
 .timer-track {
   width: 100%;
   height: 16px;
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -176,9 +179,9 @@ html, body {
   align-items: center;
   padding: 32px 24px;
   border-radius: 24px;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(8px);
-  border: 3px solid rgba(212,163,115,0.4);
+  border: 3px solid rgba(212, 163, 115, 0.4);
   margin-top: 25px;
   animation: deluxeFade 0.6s ease-out forwards;
   max-width: 850px;
@@ -195,23 +198,26 @@ html, body {
   inset: -2px;
   border-radius: 24px;
   padding: 3px;
-  background: conic-gradient(
-    from 0deg,
-    #d4a373 0%,
-    #9c6b38 15%,
-    transparent 40%,
-    transparent 60%,
-    #d4a373 85%,
-    #9c6b38 100%
-  );
+  background: conic-gradient(from 0deg,
+      #d4a373 0%,
+      #9c6b38 15%,
+      transparent 40%,
+      transparent 60%,
+      #d4a373 85%,
+      #9c6b38 100%);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   animation: borderSpin 4s linear infinite;
 }
 
 @keyframes borderSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .reveal-deluxe-img {
@@ -221,7 +227,7 @@ html, body {
   border-radius: 20px;
   border: 4px solid #d4a373;
   object-fit: cover;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
   animation: deluxeZoom 0.6s ease-out forwards;
 }
 
@@ -230,24 +236,43 @@ html, body {
   font-size: 2.6rem;
   font-weight: 900;
   color: #FFE7C1;
-  text-shadow: 0 0 12px rgba(212,163,115,0.8);
+  text-shadow: 0 0 12px rgba(212, 163, 115, 0.8);
   text-align: center;
   animation: deluxeSlideUp 0.6s ease-out forwards 0.2s;
 }
 
 @keyframes deluxeZoom {
-  0% { transform: scale(0.4); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes deluxeSlideUp {
-  0% { transform: translateY(40px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes deluxeFade {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 /* ============================================================
@@ -265,6 +290,7 @@ html, body {
   cursor: pointer;
   transition: 0.25s;
 }
+
 .skip-btn:hover {
   transform: scale(1.05);
 }
@@ -282,8 +308,8 @@ html, body {
 }
 
 .podium .place {
-  background: rgba(32,20,14,0.85);
-  border: 2px solid rgba(249,210,123,0.50);
+  background: rgba(32, 20, 14, 0.85);
+  border: 2px solid rgba(249, 210, 123, 0.50);
   padding: 22px;
   border-radius: 18px;
   text-align: center;
@@ -292,7 +318,7 @@ html, body {
 .podium .first {
   transform: translateY(-14px);
   border-color: gold;
-  box-shadow: 0 0 22px rgba(255,215,0,0.5);
+  box-shadow: 0 0 22px rgba(255, 215, 0, 0.5);
 }
 
 .medal {
@@ -313,11 +339,86 @@ html, body {
   margin-top: 40px;
   padding: 24px;
   border-radius: 18px;
-  background: rgba(32,20,14,0.85);
-  border: 2px solid rgba(249,210,123,0.50);
+  background: rgba(32, 20, 14, 0.85);
+  border: 2px solid rgba(249, 210, 123, 0.50);
 }
 
 .char-stats-card li {
   font-size: 1.3rem;
   padding: 10px 14px;
+}
+
+/* ============================================================
+   CORREÇÃO DEFINITIVA — Fundo ocupando tela toda + centralização
+   ============================================================ */
+
+/* GARANTE que o fundo SEMPRE cubra a viewport inteira */
+.bg-origens,
+.bg-wakanda {
+  min-height: 100vh !important;
+  height: 100% !important;
+  width: 100% !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Remove o scroll causado pelo background fixo */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+/* Faz a página não ficar colada no topo */
+.page-center {
+  min-height: calc(100vh - 20px) !important;
+  padding: 40px 20px !important;
+}
+
+/* O overlay agora acompanha o fundo */
+.bg-origens.overlay::before,
+.bg-wakanda.overlay::before {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Corrige cartões colando na esquerda */
+.afro-card,
+.kente-border {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Corrige inputs e botões desalinhados */
+input,
+button {
+  display: block;
+}
+
+/* Opções da tela de Jogar */
+.btn-choice {
+  width: 100%;
+  text-align: center;
+}
+
+/* Evita que textos fiquem colados na borda */
+.chip {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ajuste de responsividade (removendo "grudar" nos lados) */
+@media (min-width: 768px) {
+  .afro-card {
+    max-width: 600px;
+  }
 }
