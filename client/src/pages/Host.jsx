@@ -1,4 +1,3 @@
-// Host.jsx
 import React, { useEffect, useState } from "react";
 import { getSocket } from "../lib/socket";
 
@@ -14,7 +13,7 @@ export default function Host() {
     setSocket(s);
 
     s.on("room:state", ({ players }) => setPlayers(players));
-    s.on("game:final", ({ charStats }) => setFinalStats(charStats || null));
+    s.on("game:final", ({ charStats }) => setFinalStats(charStats || []));
 
     return () => s.disconnect();
   }, []);
@@ -33,7 +32,7 @@ export default function Host() {
 
   function openProjector() {
     const url = `${import.meta.env.BASE_URL}#/projector/${roomCode}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    window.open(url, "_blank");
   }
 
   return (
@@ -52,7 +51,7 @@ export default function Host() {
               min={3}
               max={20}
               value={rounds}
-              onChange={e => setRounds(Number(e.target.value))}
+              onChange={(e) => setRounds(Number(e.target.value))}
               className="input-afro w-40 mx-auto text-center"
             />
 
@@ -63,14 +62,15 @@ export default function Host() {
         ) : (
           <>
             <div className="text-center">
-              <p className="opacity-80">Código:</p>
+              <p className="opacity-80">Código da Sala:</p>
               <p className="text-5xl font-bold tracking-widest">{roomCode}</p>
             </div>
 
             <hr className="hr-gold opacity-40" />
 
             <h2 className="h2 text-2xl">Jogadores</h2>
-            <ul className="space-y-2">
+
+            <ul className="space-y-3">
               {Object.values(players)
                 .filter(p => p.name !== "Host" && p.name !== "PROJETOR")
                 .map((p, i) => (
@@ -96,8 +96,10 @@ export default function Host() {
 
             {finalStats && (
               <>
-                <hr className="hr-gold opacity-40 mt-2" />
+                <hr className="hr-gold opacity-40 mt-3" />
+
                 <h2 className="h2 text-2xl">Personagens mais acertados</h2>
+
                 <ol className="space-y-2">
                   {finalStats.map((c, i) => (
                     <li key={i} className="chip p-3 rounded-xl flex justify-between">
