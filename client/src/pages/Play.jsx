@@ -8,9 +8,11 @@ export default function Play() {
 
   const [socket, setSocket] = useState(null);
   const [phase, setPhase] = useState("lobby");
-  const [status, setStatus] = useState("");
+
+  const [status, setStatus] = useState("Aguardando...");
   const [hints, setHints] = useState([]);
   const [options, setOptions] = useState([]);
+
   const [reveal, setReveal] = useState(null);
   const [feedback, setFeedback] = useState(null);
 
@@ -22,29 +24,29 @@ export default function Play() {
 
     const name = params.get("name");
     const team = params.get("team");
+
     s.emit("room:join", { roomCode, name, team });
 
     // COUNTDOWN
     s.on("game:countdown:start", ({ seconds }) => {
       setPhase("countdown");
+      setStatus(seconds);
       let n = seconds;
-      setStatus(n);
-
-      const timer = setInterval(() => {
+      const i = setInterval(() => {
         n--;
         setStatus(n > 0 ? n : "...");
-        if (n <= 0) clearInterval(timer);
+        if (n <= 0) clearInterval(i);
       }, 1000);
     });
 
     // ROUND START
-    s.on("round:start", ({ roundNumber, totalRounds, hints, options, duration }) => {
+    s.on("round:start", ({ roundNumber, totalRounds, hints, duration, options }) => {
       setPhase("playing");
-      setFeedback(null);
       setReveal(null);
-      setStatus(`Round ${roundNumber}/${totalRounds}`);
+      setFeedback(null);
       setHints(hints);
       setOptions(options);
+      setStatus(`Round ${roundNumber}/${totalRounds}`);
 
       if (barRef.current) {
         barRef.current.style.transition = "none";
@@ -53,45 +55,40 @@ export default function Play() {
         setTimeout(() => {
           barRef.current.style.transition = `width ${duration}s linear`;
           barRef.current.style.width = "0%";
-        }, 25);
+        }, 20);
       }
     });
 
-    // FEEDBACK DE RESPOSTA
-    s.on("answer:feedback", ({ ok }) => {
-      setFeedback(ok ? "ACERTOU! 🎉" : "Errou 😢");
+    // JOGADOR RECEBE FEEDBACK IMEDIATO
+    s.on("answer:feedback", ({ ok, correctName, image }) => {
+      setFeedback(ok ? "Acertou!" : "Errou!");
+      setReveal({ name: correctName, image });
+      setOptions([]); // remove botões
+      setPhase("reveal-local"); // revelação individual
     });
 
-    // FORÇAR REVELAÇÃO
-    s.on("force:reveal", ({ name, image }) => {
-      setPhase("reveal");
-      setReveal({ name, image });
-      setOptions([]);
-    });
-
-    // REVEAL GLOBAL
+    // REVEAL GLOBAL (projeta)
     s.on("round:reveal", ({ name, image }) => {
       setPhase("reveal");
       setReveal({ name, image });
-      setOptions([]);
     });
 
     // FINAL
-    s.on("game:final", () => setPhase("final"));
+    s.on("game:final", () => {
+      setPhase("final");
+    });
 
     return () => s.disconnect();
   }, []);
 
   function answer(opt) {
     socket.emit("answer:send", { roomCode, answer: opt });
-    setOptions([]);
   }
 
   return (
     <div className="page-center bg-wakanda overlay animate-tribal">
-      <div className="afro-card kente-border max-w-2xl w-full box-shadow-lift space-y-6">
+      <div className="afro-card kente-border max-w-2xl w-full space-y-6">
 
-        {/* HEADER */}
         <div className="flex justify-between">
           <h1 className="title-afro text-3xl">Sala {roomCode}</h1>
           <span className="chip">{status}</span>
@@ -101,37 +98,48 @@ export default function Play() {
 
         {/* COUNTDOWN */}
         {phase === "countdown" && (
-          <h1 className="text-center text-7xl animate-pulse font-extrabold">
+          <h1 className="text-center text-7xl font-bold animate-pulse">
             {status}
           </h1>
         )}
 
-        {/* FEEDBACK */}
-        {feedback && (
-          <div className="text-center text-3xl font-bold text-yellow-300 animate-pulse">
-            {feedback}
+        {/* REVEAL LOCAL */}
+        {phase === "reveal-local" && reveal && (
+          <div className="reveal-deluxe-wrapper">
+            <img
+              src={import.meta.env.BASE_URL + reveal.image.replace(/^\//, "")}
+              className="reveal-deluxe-img"
+            />
+            <div className="reveal-deluxe-name">
+              {reveal.name}
+            </div>
+            <div className="text-3xl mt-4 font-bold">
+              {feedback}
+            </div>
           </div>
         )}
 
-        {/* REVEAL */}
+        {/* REVEAL GLOBAL */}
         {phase === "reveal" && reveal && (
-          <div className="text-center">
+          <div className="reveal-deluxe-wrapper">
             <img
               src={import.meta.env.BASE_URL + reveal.image.replace(/^\//, "")}
-              className="reveal-deluxe-img mx-auto"
+              className="reveal-deluxe-img"
             />
-            <h2 className="text-3xl font-bold mt-4">{reveal.name}</h2>
+            <div className="reveal-deluxe-name">
+              {reveal.name}
+            </div>
           </div>
         )}
 
         {/* PLAYING */}
         {phase === "playing" && (
           <>
-            <div className="timer-track mb-4">
+            <div className="timer-track">
               <div ref={barRef} className="timer-bar"></div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 mt-4">
               {hints.map((h, i) => (
                 <div key={i} className="chip p-4 rounded-xl text-lg">
                   <b>Pista {i + 1}:</b> {h}
@@ -151,8 +159,8 @@ export default function Play() {
 
         {/* FINAL */}
         {phase === "final" && (
-          <div className="text-center text-xl p-4 chip">
-            A partida terminou! Veja o pódio no projetor.
+          <div className="text-center chip p-4 text-xl">
+            Jogo encerrado! Veja o pódio no projetor 🎉
           </div>
         )}
 
