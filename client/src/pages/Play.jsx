@@ -1,3 +1,4 @@
+// Play.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { getSocket } from "../lib/socket";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -55,25 +56,24 @@ export default function Play() {
         setTimeout(() => {
           barRef.current.style.transition = `width ${roundDurationRef.current}s linear`;
           barRef.current.style.width = "0%";
-        }, 20);
+        }, 30);
       }
     });
 
-    // feedback (para quem respondeu)
+    // feedback to answering socket
     s.on("answer:feedback", ({ ok, correctName, image }) => {
       setFeedback({ ok });
-      // move player to reveal immediately (server also emits round:reveal to all)
+      // show reveal for this player immediately (server also emits round:reveal to all)
       setPhase("reveal");
-      setReveal({ name: correctName, image });
+      setReveal({ name: correctName, image: (image || "").replace(/^\//, "") });
       setOptions([]);
-      // ensure bar collapsed
       if (barRef.current) { barRef.current.style.transition = "none"; barRef.current.style.width = "0%"; }
     });
 
     // reveal (also emitted when time runs out)
     s.on("round:reveal", ({ name, image }) => {
       setPhase("reveal");
-      setReveal({ name, image });
+      setReveal({ name, image: (image || "").replace(/^\//, "") });
       setOptions([]);
       if (barRef.current) { barRef.current.style.transition = "none"; barRef.current.style.width = "0%"; }
     });

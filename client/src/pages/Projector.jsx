@@ -1,3 +1,4 @@
+// Projector.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSocket } from "../lib/socket";
@@ -46,14 +47,15 @@ export default function Projector() {
         setTimeout(() => {
           barRef.current.style.transition = `width ${duration}s linear`;
           barRef.current.style.width = "0%";
-        }, 20);
+        }, 30);
       }
     });
 
     s.on("round:reveal", ({ name, image }) => {
       setPhase("reveal");
-      setReveal({ name, image });
-      // ensure bar at 0
+      setReveal({ name, image: (image || "").replace(/^\//, "") });
+
+      // ensure bar is collapsed
       if (barRef.current) { barRef.current.style.transition = "none"; barRef.current.style.width = "0%"; }
     });
 
@@ -65,6 +67,7 @@ export default function Projector() {
     return () => s.disconnect();
   }, [roomCode]);
 
+  // host can request skip — server will ignore if not host
   function handleSkip() {
     if (!socket) return;
     socket.emit("round:skip", { roomCode });
@@ -108,7 +111,8 @@ export default function Projector() {
             />
             <div className="reveal-deluxe-name" style={{ fontSize: "3rem" }}>{reveal.name}</div>
 
-            {/* Botão pular (aparece na revelação) */}
+            {/* Botão pular — aparece apenas durante a revelação.
+                Só o host conseguirá realmente pular (será ignorado no servidor se não for host). */}
             <div style={{ textAlign: "center", marginTop: 18 }}>
               <button className="btn-secondary px-6 py-3 rounded-xl" onClick={handleSkip}>
                 ⏭️ Pular para o próximo round
@@ -119,7 +123,7 @@ export default function Projector() {
 
         {phase === "final" && finalRank && (
           <div className="mt-10">
-            <h2 className="text-4xl title-afro text-center mb-8">Pódio Final</h2>
+            <h2 className="text-4xl title-afro text-center mb-8">🏆 Pódio Final</h2>
 
             <div className="podium">
               <div className="place">
