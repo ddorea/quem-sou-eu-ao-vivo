@@ -7,14 +7,12 @@ export default function Play() {
   const [params] = useSearchParams();
 
   const [socket, setSocket] = useState(null);
-
   const [phase, setPhase] = useState("lobby");
-  const [status, setStatus] = useState("Aguardando...");
+  const [status, setStatus] = useState("");
   const [hints, setHints] = useState([]);
   const [options, setOptions] = useState([]);
   const [reveal, setReveal] = useState(null);
-
-  const [answerResult, setAnswerResult] = useState(null); // 🟢 novo
+  const [feedback, setFeedback] = useState(null);
 
   const barRef = useRef(null);
 
@@ -24,37 +22,30 @@ export default function Play() {
 
     const name = params.get("name");
     const team = params.get("team");
-
     s.emit("room:join", { roomCode, name, team });
 
-    // ----------------------------------------
     // COUNTDOWN
-    // ----------------------------------------
     s.on("game:countdown:start", ({ seconds }) => {
       setPhase("countdown");
-      setStatus(seconds);
-
       let n = seconds;
-      const interval = setInterval(() => {
+      setStatus(n);
+
+      const timer = setInterval(() => {
         n--;
         setStatus(n > 0 ? n : "...");
-        if (n <= 0) clearInterval(interval);
+        if (n <= 0) clearInterval(timer);
       }, 1000);
     });
 
-    // ----------------------------------------
-    // START ROUND
-    // ----------------------------------------
-    s.on("round:start", ({ roundNumber, totalRounds, hints, duration, options }) => {
+    // ROUND START
+    s.on("round:start", ({ roundNumber, totalRounds, hints, options, duration }) => {
       setPhase("playing");
+      setFeedback(null);
       setReveal(null);
-
       setStatus(`Round ${roundNumber}/${totalRounds}`);
+      setHints(hints);
+      setOptions(options);
 
-      setHints(hints || []);
-      setOptions(options || []);
-
-      // reinicia animação da barra
       if (barRef.current) {
         barRef.current.style.transition = "none";
         barRef.current.style.width = "100%";
@@ -62,42 +53,38 @@ export default function Play() {
         setTimeout(() => {
           barRef.current.style.transition = `width ${duration}s linear`;
           barRef.current.style.width = "0%";
-        }, 30);
+        }, 25);
       }
     });
 
-    // ----------------------------------------
     // FEEDBACK DE RESPOSTA
-    // ----------------------------------------
-    s.on("answer:result", ({ correct }) => {
-      setAnswerResult(correct ? "ACERTOU!" : "ERROU!");
-
-      setTimeout(() => setAnswerResult(null), 2000);
+    s.on("answer:feedback", ({ ok }) => {
+      setFeedback(ok ? "ACERTOU! 🎉" : "Errou 😢");
     });
 
-    // ----------------------------------------
-    // REVEAL
-    // ----------------------------------------
-    s.on("round:reveal", ({ name, image }) => {
-      setReveal({ name, image });
+    // FORÇAR REVELAÇÃO
+    s.on("force:reveal", ({ name, image }) => {
       setPhase("reveal");
+      setReveal({ name, image });
       setOptions([]);
     });
 
-    // ----------------------------------------
-    // FINAL DO JOGO
-    // ----------------------------------------
+    // REVEAL GLOBAL
+    s.on("round:reveal", ({ name, image }) => {
+      setPhase("reveal");
+      setReveal({ name, image });
+      setOptions([]);
+    });
+
+    // FINAL
     s.on("game:final", () => setPhase("final"));
 
     return () => s.disconnect();
   }, []);
 
-  // ----------------------------------------
-  // ENVIAR RESPOSTA
-  // ----------------------------------------
   function answer(opt) {
     socket.emit("answer:send", { roomCode, answer: opt });
-    setOptions([]); // desabilita botões após a resposta
+    setOptions([]);
   }
 
   return (
@@ -105,7 +92,7 @@ export default function Play() {
       <div className="afro-card kente-border max-w-2xl w-full box-shadow-lift space-y-6">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between">
           <h1 className="title-afro text-3xl">Sala {roomCode}</h1>
           <span className="chip">{status}</span>
         </div>
@@ -117,6 +104,13 @@ export default function Play() {
           <h1 className="text-center text-7xl animate-pulse font-extrabold">
             {status}
           </h1>
+        )}
+
+        {/* FEEDBACK */}
+        {feedback && (
+          <div className="text-center text-3xl font-bold text-yellow-300 animate-pulse">
+            {feedback}
+          </div>
         )}
 
         {/* REVEAL */}
@@ -133,23 +127,10 @@ export default function Play() {
         {/* PLAYING */}
         {phase === "playing" && (
           <>
-            {/* Barra de tempo */}
             <div className="timer-track mb-4">
               <div ref={barRef} className="timer-bar"></div>
             </div>
 
-            {/* FEEDBACK ACERTOU/ERROU */}
-            {answerResult && (
-              <div
-                className={`text-center text-4xl font-extrabold mb-4 ${
-                  answerResult === "ACERTOU!" ? "text-green-400" : "text-red-400"
-                } animate-pulse`}
-              >
-                {answerResult}
-              </div>
-            )}
-
-            {/* Pistas */}
             <div className="space-y-4">
               {hints.map((h, i) => (
                 <div key={i} className="chip p-4 rounded-xl text-lg">
@@ -158,7 +139,6 @@ export default function Play() {
               ))}
             </div>
 
-            {/* Botões de resposta */}
             <div className="grid grid-cols-2 gap-4 mt-6">
               {options.map((opt, i) => (
                 <button key={i} className="btn-choice" onClick={() => answer(opt)}>
