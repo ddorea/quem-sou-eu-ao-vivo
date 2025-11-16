@@ -42,7 +42,6 @@ export default function Host() {
         <h1 className="title-afro text-4xl text-center">Criar Sala</h1>
         <hr className="hr-gold opacity-60" />
 
-        {/* Sem sala criada */}
         {!roomCode ? (
           <div className="space-y-6 text-center">
             <p className="opacity-90">Quantos rounds você quer jogar?</p>
@@ -62,7 +61,6 @@ export default function Host() {
           </div>
         ) : (
           <>
-            {/* Sala criada */}
             <div className="text-center">
               <p className="opacity-80">Código:</p>
               <p className="text-5xl font-bold tracking-widest">{roomCode}</p>
@@ -70,7 +68,6 @@ export default function Host() {
 
             <hr className="hr-gold opacity-40" />
 
-            {/* Jogadores */}
             <h2 className="h2 text-2xl">Jogadores</h2>
             <ul className="space-y-2">
               {Object.values(players)
@@ -78,14 +75,13 @@ export default function Host() {
                 .map((p, i) => (
                   <li key={i} className="chip p-3 rounded-xl flex justify-between">
                     <span>{p.name}</span>
-                    <span>{p.corrects || 0} acertos</span>
+                    <span>{p.corrects ?? 0} acertos</span>
                   </li>
                 ))}
             </ul>
 
             <hr className="hr-gold opacity-40" />
 
-            {/* Gerenciar */}
             <h2 className="h2 text-2xl">Gerenciar</h2>
             <div className="space-y-3">
               <button className="btn-secondary w-full rounded-xl" onClick={startGame}>
@@ -97,10 +93,9 @@ export default function Host() {
               </button>
             </div>
 
-            {/* Estatísticas após o jogo */}
             {finalStats && (
               <>
-                <hr className="hr-gold opacity-40" />
+                <hr className="hr-gold opacity-40 mt-2" />
                 <h2 className="h2 text-2xl">Personagens mais acertados</h2>
                 <ol className="space-y-2">
                   {finalStats.map((c, i) => (
